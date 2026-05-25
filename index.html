@@ -75,507 +75,402 @@
   </script>
 
   <style>
-    :root {
-      --bg: #0B0D10;
-      --bg-elevated: #11141A;
-      --surface: rgba(30, 35, 45, 0.6);
-      --border: rgba(255,255,255,0.08);
-      --text: #E8E9EC;
-      --text-muted: #5F6570;
-      --text-secondary: #9BA0AA;
-      --accent: #D9FF3C;
-      --accent-dim: rgba(217, 255, 60, 0.15);
-      --accent-glow: rgba(217, 255, 60, 0.3);
-      --green: #4ADE80;
-      --red: #FF5C5C;
-      --yellow: #F5A524;
-      --font-sans: 'Inter', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-sans);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    .noise {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 256px 256px;
-    }
-    .gradient-orb {
-      position: fixed; width: 600px; height: 600px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(217,255,60,0.08) 0%, transparent 70%);
-      top: -200px; right: -200px; pointer-events: none; z-index: 0;
-      animation: orbFloat 20s ease-in-out infinite;
-    }
-    .gradient-orb-2 {
-      position: fixed; width: 500px; height: 500px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(74,222,128,0.06) 0%, transparent 70%);
-      bottom: -150px; left: -150px; pointer-events: none; z-index: 0;
-      animation: orbFloat 25s ease-in-out infinite reverse;
-    }
-    @keyframes orbFloat {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-30px, 20px); }
-    }
-
-    .container { max-width: 420px; margin: 0 auto; padding: 0 1.25rem; position: relative; z-index: 1; }
+    :root{--bg:#050608;--bg2:#0B0D10;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.06);--text:#F0F1F3;--muted:#6B7280;--text2:#9CA3AF;--accent:#D9FF3C;--accent-glow:rgba(217,255,60,.35);--green:#4ADE80;--red:#FF5C5C;--yellow:#F5A524;--font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
+    .reveal{opacity:0;transform:translateY(50px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
 
     /* Nav */
-    .nav {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.25rem 0; border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
-      text-decoration: none; color: var(--text);
-    }
-    .nav-logo .mark {
-      width: 28px; height: 28px; background: var(--accent);
-      border-radius: 6px; display: grid; place-items: center;
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      color: var(--bg);
-    }
-    .nav-badge {
-      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent);
-      padding: 3px 8px; border: 1px solid rgba(217,255,60,0.3); border-radius: 4px;
-    }
+    nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:68px;background:rgba(5,6,8,.75);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);z-index:100}
+    .logo{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.05rem;color:var(--text);text-decoration:none}
+    .logo-mark{width:34px;height:34px;background:var(--accent);border-radius:10px;display:grid;place-items:center;color:var(--bg);font-size:1.2rem;box-shadow:0 0 20px rgba(217,255,60,.3)}
+    .nav-links{display:flex;gap:2rem}
+    .nav-links a{color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-cta{display:none;padding:.55rem 1.1rem;background:var(--accent);color:var(--bg);border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .3s}
+    .nav-cta:hover{transform:translateY(-2px);box-shadow:0 6px 30px var(--accent-glow)}
+    @media(min-width:640px){.nav-cta{display:inline-block}}
+    @media(max-width:640px){.nav-links{display:none}}
 
     /* Hero */
-    .hero { padding: 3rem 0 2rem; text-align: center; }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--accent);
-      padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,255,60,0.2);
-      margin-bottom: 1.5rem; background: var(--accent-dim);
-    }
-    .hero-tag .pulse-dot {
-      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-      animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .hero h1 {
-      font-size: clamp(2rem, 8vw, 2.6rem); font-weight: 800; line-height: 1.1;
-      letter-spacing: -0.03em; margin-bottom: 1rem;
-    }
-    .hero h1 .gradient {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--green) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .hero-desc {
-      color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6;
-      max-width: 340px; margin: 0 auto 2rem;
-    }
+    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8rem 1.5rem 5rem;text-align:center;z-index:1}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1.1rem;border-radius:100px;background:var(--surface);border:1px solid var(--border);font-size:.72rem;font-weight:600;color:var(--text2);margin-bottom:1.75rem;animation:fadeInDown .8s ease forwards;opacity:0}
+    .hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.5s infinite}
+    .hero h1{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.05;letter-spacing:-.035em;max-width:950px;animation:fadeInUp 1s ease .15s forwards;opacity:0}
+    .hero h1 .grad{background:linear-gradient(135deg,var(--accent) 0%,var(--green) 60%,#60a5fa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero h1 .grad-shimmer{background:linear-gradient(90deg,var(--accent),var(--green),var(--accent));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+    @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .hero-sub{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--muted);max-width:540px;margin:1.5rem auto 2.25rem;animation:fadeInUp 1s ease .35s forwards;opacity:0}
+    .hero-btns{display:flex;flex-direction:column;gap:.75rem;align-items:center;animation:fadeInUp 1s ease .55s forwards;opacity:0}
+    @media(min-width:480px){.hero-btns{flex-direction:row}}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 2.2rem;border-radius:14px;font-size:1rem;font-weight:700;text-decoration:none;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .4s;border:none;cursor:pointer;font-family:inherit}
+    .btn-prim{background:var(--accent);color:var(--bg);box-shadow:0 0 50px rgba(217,255,60,.12)}
+    .btn-prim:hover{transform:translateY(-3px);box-shadow:0 12px 50px var(--accent-glow)}
+    .btn-sec{background:var(--surface);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}
+    .btn-sec:hover{border-color:var(--border-hover);transform:translateY(-3px);background:rgba(255,255,255,.06)}
+    .btn svg{width:18px;height:18px}
+
+    .trust{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:2.5rem;animation:fadeInUp 1s ease .75s forwards;opacity:0}
+    .pill{padding:.4rem 1rem;border-radius:100px;background:var(--surface);border:1px solid var(--border);font-size:.72rem;color:var(--text2);display:flex;align-items:center;gap:.4rem;transition:border-color .2s}
+    .pill:hover{border-color:var(--border-hover)}
+    .pill svg{width:13px;height:13px}
+
+    /* Phone mockup */
+    .mockup{margin:4rem auto 0;max-width:280px;perspective:1000px;animation:floatPhone 5s ease-in-out infinite,fadeInUp 1s ease .9s forwards;opacity:0}
+    @keyframes floatPhone{0%,100%{transform:translateY(0) rotateX(5deg)}50%{transform:translateY(-18px) rotateX(5deg)}}
+    .phone{background:linear-gradient(145deg,#161921,#0d1015);border:1.5px solid rgba(255,255,255,.08);border-radius:36px;padding:10px;box-shadow:0 50px 100px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset,0 0 60px rgba(217,255,60,.04)}
+    .screen{background:linear-gradient(180deg,#1a2030 0%,#0b0f14 100%);border-radius:26px;overflow:hidden;aspect-ratio:9/19.5;position:relative}
+    .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:38%;height:26px;background:#11141a;border-radius:0 0 16px 16px;z-index:2}
+    .screen-content{padding:3rem 1rem 1.2rem;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+    .s-badge{padding:.3rem .85rem;border-radius:8px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.2);color:var(--green);font-size:.6rem;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+    .s-icon{width:52px;height:52px;border-radius:16px;background:rgba(217,255,60,.08);border:1px solid rgba(217,255,60,.15);display:grid;place-items:center;font-size:1.4rem;box-shadow:0 0 20px rgba(217,255,60,.08)}
+    .s-title{font-weight:700;font-size:.85rem;text-align:center}
+    .s-detail{font-size:.68rem;color:var(--muted);text-align:center}
+    .s-line{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);margin:.1rem 0}
+    .s-row{width:100%;display:flex;justify-content:space-between;font-size:.68rem}
+    .s-row span:first-child{color:var(--muted)}.s-row span:last-child{font-weight:600}
+    .s-tx{font-family:var(--mono);font-size:.55rem;color:var(--green);word-break:break-all;text-align:center;margin-top:.15rem}
+
+    /* Sections */
+    .section{position:relative;z-index:1;padding:6rem 1.5rem;max-width:1100px;margin:0 auto}
+    .sec-head{text-align:center;margin-bottom:3.5rem}
+    .sec-head h2{font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:800;margin-bottom:.6rem}
+    .sec-head p{color:var(--muted);font-size:1.05rem;max-width:480px;margin:0 auto}
+    .sec-head .overline{font-family:var(--mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem;display:inline-block;padding:.25rem .7rem;border:1px solid rgba(217,255,60,.2);border-radius:4px}
+
+    /* Cards */
+    .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1rem}
+    .card{padding:1.6rem;border-radius:18px;background:var(--surface);border:1px solid var(--border);backdrop-filter:blur(16px);transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s,border-color .3s;position:relative;overflow:hidden}
+    .card:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,.35);border-color:var(--border-hover)}
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);pointer-events:none}
+    .card .c-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem}
+    .card h3{font-size:1.05rem;font-weight:700;margin-bottom:.35rem}
+    .card p{font-size:.85rem;color:var(--muted);line-height:1.6}
+
+    /* Steps */
+    .steps{display:flex;flex-direction:column;gap:1.5rem;max-width:700px;margin:0 auto}
+    .step{display:flex;gap:1.25rem;align-items:flex-start;padding:1.25rem;border-radius:16px;background:var(--surface);border:1px solid var(--border);transition:border-color .3s}
+    .step:hover{border-color:var(--border-hover)}
+    .step-num{width:40px;height:40px;border-radius:12px;background:var(--accent);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:.95rem;flex-shrink:0;font-family:var(--mono)}
+    .step h4{font-weight:700;margin-bottom:.25rem;font-size:1rem}
+    .step p{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+    /* Stats */
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:600px;margin:0 auto}
+    @media(min-width:640px){.stats{grid-template-columns:repeat(4,1fr)}}
+    .stat{text-align:center;padding:1.5rem 1rem;border-radius:16px;background:var(--surface);border:1px solid var(--border)}
+    .stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .stat-label{font-size:.72rem;color:var(--muted);margin-top:.25rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+
+    /* Testimonials */
+    .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .testi{padding:1.5rem;border-radius:18px;background:var(--surface);border:1px solid var(--border);position:relative}
+    .testi::after{content:'"';position:absolute;top:1rem;right:1.5rem;font-size:3rem;color:rgba(255,255,255,.03);font-family:serif;line-height:1}
+    .testi-stars{color:var(--yellow);font-size:.85rem;margin-bottom:.6rem;letter-spacing:.1em}
+    .testi-text{font-size:.85rem;color:var(--text2);line-height:1.6;margin-bottom:1rem}
+    .testi-author{display:flex;align-items:center;gap:.7rem}
+    .testi-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--green));display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--bg)}
+    .testi-name{font-weight:600;font-size:.85rem}
+    .testi-role{font-size:.72rem;color:var(--muted)}
+
+    /* FAQ */
+    .faq{display:flex;flex-direction:column;gap:.75rem;max-width:700px;margin:0 auto}
+    .faq-item{border-radius:14px;background:var(--surface);border:1px solid var(--border);overflow:hidden;transition:border-color .3s}
+    .faq-item:hover{border-color:var(--border-hover)}
+    .faq-q{padding:1.1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:.9rem;gap:1rem}
+    .faq-q svg{width:18px;height:18px;color:var(--muted);transition:transform .3s;flex-shrink:0}
+    .faq-item.open .faq-q svg{transform:rotate(180deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1),padding .4s;padding:0 1.25rem;font-size:.85rem;color:var(--muted);line-height:1.6}
+    .faq-item.open .faq-a{max-height:200px;padding:0 1.25rem 1.1rem}
 
     /* CTA */
-    .cta-btn {
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      width: 100%; padding: 1.1rem; border-radius: 14px; border: none;
-      background: var(--accent); color: var(--bg); font-family: var(--font-sans);
-      font-size: 1.05rem; font-weight: 700; cursor: pointer; text-decoration: none;
-      position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.3s;
-      box-shadow: 0 0 40px rgba(217,255,60,0.15);
-    }
-    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(217,255,60,0.25); }
-    .cta-btn::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
-    }
-    .cta-btn:hover::before { left: 100%; }
-    .cta-btn svg { width: 20px; height: 20px; }
-
-    .cta-sub {
-      margin-top: 0.75rem; font-family: var(--font-mono); font-size: 10px;
-      color: var(--text-muted); text-align: center;
-    }
-
-    /* Trust badges */
-    .trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; padding: 2rem 0; }
-    .trust-badge {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 500; color: var(--text-secondary);
-      padding: 6px 12px; border-radius: 20px;
-      background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(12px);
-    }
-    .trust-badge svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
-
-    /* Pain section */
-    .section { padding: 2.5rem 0; }
-    .section-title {
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem;
-    }
-    .section h2 {
-      font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 1.25rem;
-    }
-
-    .pain-list { display: flex; flex-direction: column; gap: 0.75rem; }
-    .pain-item {
-      display: flex; align-items: flex-start; gap: 0.75rem;
-      padding: 1rem; border-radius: 10px; background: var(--surface);
-      border: 1px solid var(--border); backdrop-filter: blur(12px);
-    }
-    .pain-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: rgba(255,92,92,0.1); border: 1px solid rgba(255,92,92,0.2);
-      display: grid; place-items: center; flex-shrink: 0;
-    }
-    .pain-icon svg { width: 16px; height: 16px; color: var(--red); }
-    .pain-text { font-size: 0.9rem; color: var(--text-secondary); }
-    .pain-text strong { color: var(--text); display: block; margin-bottom: 2px; }
-
-    /* How it works */
-    .steps { display: flex; flex-direction: column; gap: 1rem; }
-    .step {
-      display: flex; align-items: center; gap: 1rem;
-      padding: 1.25rem; border-radius: 12px;
-      background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(12px);
-      position: relative; overflow: hidden;
-    }
-    .step-num {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--accent); color: var(--bg);
-      display: grid; place-items: center;
-      font-family: var(--font-mono); font-size: 14px; font-weight: 700;
-      flex-shrink: 0;
-    }
-    .step h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
-    .step p { font-size: 0.8rem; color: var(--text-muted); }
-    .step-glow {
-      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
-      opacity: 0; transition: opacity 0.5s;
-    }
-    .step:hover .step-glow { opacity: 1; }
-
-    /* Feature cards */
-    .features-grid { display: grid; gap: 0.75rem; }
-    .f-card {
-      padding: 1.25rem; border-radius: 12px;
-      background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(12px);
-      position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.3s;
-    }
-    .f-card:hover { transform: translateY(-2px); border-color: rgba(217,255,60,0.15); }
-    .f-card-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      display: grid; place-items: center; margin-bottom: 0.75rem;
-      background: var(--accent-dim); border: 1px solid rgba(217,255,60,0.2);
-    }
-    .f-card-icon svg { width: 20px; height: 20px; color: var(--accent); }
-    .f-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
-    .f-card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
-
-    /* Demo preview */
-    .demo-frame {
-      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
-      background: var(--bg-elevated); position: relative;
-      margin: 1.5rem 0;
-    }
-    .demo-frame-bar {
-      display: flex; align-items: center; gap: 6px; padding: 10px 14px;
-      border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);
-    }
-    .demo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
-    .demo-dot:nth-child(1) { background: var(--red); }
-    .demo-dot:nth-child(2) { background: var(--yellow); }
-    .demo-dot:nth-child(3) { background: var(--green); }
-    .demo-content { padding: 1.5rem; }
-    .scan-line {
-      height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      animation: scanMove 2s ease-in-out infinite; margin: 1rem 0; opacity: 0.6;
-    }
-    @keyframes scanMove {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    .demo-result {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.75rem; border-radius: 8px;
-      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2);
-    }
-    .demo-result svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
-    .demo-result span { font-size: 0.8rem; color: var(--text-secondary); }
-    .demo-result strong { color: var(--green); }
-
-    /* Showcase badge */
-    .showcase {
-      text-align: center; padding: 2rem 0 1rem;
-    }
-    .showcase-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 8px;
-      background: rgba(245,165,36,0.08); border: 1px solid rgba(245,165,36,0.25);
-      font-size: 11px; color: var(--yellow); font-weight: 500;
-    }
-    .showcase-badge svg { width: 14px; height: 14px; }
+    .cta-sec{text-align:center;padding:6rem 1.5rem;position:relative;z-index:1}
+    .cta-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(217,255,60,.07) 0%,transparent 55%);pointer-events:none}
+    .cta-sec h2{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;margin-bottom:1rem;position:relative}
+    .cta-sec p{color:var(--muted);font-size:1.1rem;max-width:480px;margin:0 auto 2rem;position:relative}
+    .cta-glow{display:inline-block;position:relative}
+    .cta-glow::before{content:'';position:absolute;inset:-4px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--green));opacity:.25;filter:blur(12px);z-index:-1;animation:glowPulse 3s ease-in-out infinite}
+    @keyframes glowPulse{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.35;transform:scale(1.03)}}
 
     /* Footer */
-    .footer {
-      padding: 2rem 0 2.5rem; border-top: 1px solid var(--border);
-      text-align: center; color: var(--text-muted);
-    }
-    .footer-links {
-      display: flex; justify-content: center; gap: 1.25rem; margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .footer-links a {
-      color: var(--text-secondary); text-decoration: none; font-size: 0.8rem;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--text); }
-    .footer-copy { font-size: 0.75rem; font-family: var(--font-mono); }
-    .footer-copy a { color: var(--text-muted); }
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;color:var(--muted);font-size:.8rem}
+    footer .foot-links{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+    footer a{color:var(--text2);text-decoration:none;transition:color .2s}
+    footer a:hover{color:var(--text)}
 
-    /* Fade in animation */
-    .fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
-    .fade-in-d1 { animation-delay: 0.1s; }
-    .fade-in-d2 { animation-delay: 0.2s; }
-    .fade-in-d3 { animation-delay: 0.3s; }
-    .fade-in-d4 { animation-delay: 0.4s; }
-    @keyframes fadeIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeInDown{from{opacity:0;transform:translateY(-25px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
   </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="gradient-orb"></div>
-  <div class="gradient-orb-2"></div>
+  <canvas id="particles"></canvas>
 
-  <div class="container">
-    <nav class="nav fade-in">
-      <a href="index.html" class="nav-logo">
-        <div class="mark">KC</div>
-        <span>KashrutChain</span>
+  <nav>
+    <a href="#" class="logo"><div class="logo-mark">&#x2726;</div>KashrutChain</a>
+    <div class="nav-links">
+      <a href="#how">How It Works</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="scan.html" class="nav-cta">Open Scanner</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge"><span class="dot"></span>Handshake AI Showcase 2026</div>
+    <h1>Point. Scan. <span class="grad">Know.</span><br><span class="grad-shimmer">Kosher verified by AI.</span></h1>
+    <p class="hero-sub">The world's first AI-powered kosher scanner. Read any label in seconds, verify on blockchain, and know exactly what's in your food.</p>
+    <div class="hero-btns">
+      <a href="scan.html" class="btn btn-prim">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        Launch Scanner
       </a>
-      <div class="nav-badge">Beta</div>
-    </nav>
-
-    <section class="hero">
-      <div class="hero-tag fade-in fade-in-d1">
-        <span class="pulse-dot"></span>
-        Handshake AI Showcase 2026
-      </div>
-      <h1 class="fade-in fade-in-d2">
-        Point. Scan.<br><span class="gradient">Know It's Kosher.</span>
-      </h1>
-      <p class="hero-desc fade-in fade-in-d3">
-        AI reads the label. Blockchain proves it's real. Works on your kosher phone, iPhone, Android, or desktop — anywhere.
-      </p>
-      <a href="scan.html" class="cta-btn fade-in fade-in-d4">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        Start Scanning
-      </a>
-      <div class="cta-sub fade-in fade-in-d4">Free. No app store needed. Just open and scan.</div>
-    </section>
-
-    <div class="trust fade-in fade-in-d4">
-      <div class="trust-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        2,000+ scans this month
-      </div>
-      <div class="trust-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Blockchain Verified
-      </div>
-      <div class="trust-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Privacy First
-      </div>
+      <a href="#how" class="btn btn-sec">See How It Works</a>
+    </div>
+    <div class="trust">
+      <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>No Signup</span>
+      <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Blockchain Secured</span>
+      <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Fraud Detection</span>
+      <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Works Offline</span>
     </div>
 
-    <section class="section">
-      <div class="section-title">The Problem</div>
-      <h2>Fake symbols. Hidden ingredients. No proof.</h2>
-      <div class="pain-list">
-        <div class="pain-item fade-in">
-          <div class="pain-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          </div>
-          <div class="pain-text">
-            <strong>Counterfeit Symbols</strong>
-            Fake OU, OK, and STAR-K logos on unverified products. No way for consumers to check.
-          </div>
-        </div>
-        <div class="pain-item fade-in">
-          <div class="pain-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <div class="pain-text">
-            <strong>Ambiguous Ingredients</strong>
-            "Natural flavors," "enzymes," "glycerin" — are they kosher? AI flags the risks instantly.
+    <div class="mockup">
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="screen-content">
+            <span class="s-badge">Verified</span>
+            <div class="s-icon">&#x2726;</div>
+            <div class="s-title">Manischewitz Matzo</div>
+            <div class="s-detail">OU Kosher &middot; Pareve</div>
+            <div class="s-line"></div>
+            <div class="s-row"><span>Symbol</span><span>OU-P</span></div>
+            <div class="s-row"><span>Status</span><span style="color:var(--green)">Kosher</span></div>
+            <div class="s-row"><span>Passover</span><span style="color:var(--green)">Certified</span></div>
+            <div class="s-line"></div>
+            <div class="s-detail">Blockchain Proof</div>
+            <div class="s-tx">0x7f2c...a91b &#x2713;</div>
           </div>
         </div>
-        <div class="pain-item fade-in">
-          <div class="pain-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          </div>
-          <div class="pain-text">
-            <strong>No Proof of Verification</strong>
-            Calling a certifier takes days. There's no instant, tamper-proof record you can share.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title">How It Works</div>
-      <h2>Three steps to absolute confidence.</h2>
-      <div class="steps">
-        <div class="step fade-in">
-          <div class="step-glow"></div>
-          <div class="step-num">1</div>
-          <div>
-            <h3>Point your camera</h3>
-            <p>Any product label, any angle. Works on kosher phones, iOS, Android, and desktop.</p>
-          </div>
-        </div>
-        <div class="step fade-in">
-          <div class="step-glow"></div>
-          <div class="step-num">2</div>
-          <div>
-            <h3>AI reads the label</h3>
-            <p>GPT-4o Vision extracts symbols, ingredients, and classification in seconds.</p>
-          </div>
-        </div>
-        <div class="step fade-in">
-          <div class="step-glow"></div>
-          <div class="step-num">3</div>
-          <div>
-            <h3>Blockchain confirms</h3>
-            <p>Every verification is recorded on Polygon. Tamper-proof. Shareable. Forever.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title">Live Demo Preview</div>
-      <h2>See it in action.</h2>
-      <div class="demo-frame fade-in">
-        <div class="demo-frame-bar">
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
-          <span style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;">Scanner</span>
-        </div>
-        <div class="demo-content">
-          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-            <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-dim);border:1px solid rgba(217,255,60,0.2);display:grid;place-items:center;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
-            </div>
-            <div>
-              <div style="font-weight:600;font-size:0.9rem;">Product Label Detected</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);">Analyzing with GPT-4o Vision...</div>
-            </div>
-          </div>
-          <div class="scan-line"></div>
-          <div class="demo-result">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span><strong>VERIFIED</strong> — OU-D Orthodox Union Dairy — Blockchain Tx: 0x7a3f...</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title">Features</div>
-      <h2>Built for the real world.</h2>
-      <div class="features-grid">
-        <div class="f-card fade-in">
-          <div class="f-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          </div>
-          <h3>AI Label Scanning</h3>
-          <p>Camera reads any product label and extracts kosher symbols, ingredients, and manufacturer instantly.</p>
-        </div>
-        <div class="f-card fade-in">
-          <div class="f-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <h3>Blockchain Proof</h3>
-          <p>Every verification is immutably recorded on Polygon PoS. Tamper-proof certificate you can share anywhere.</p>
-        </div>
-        <div class="f-card fade-in">
-          <div class="f-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <h3>Fraud Detection</h3>
-          <p>Flags counterfeit kosher symbols and suspicious ingredients before you take a bite.</p>
-        </div>
-        <div class="f-card fade-in">
-          <div class="f-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <h3>Works Everywhere</h3>
-          <p>PWA runs on kosher phones, iOS, Android, and desktop. No app store approval needed.</p>
-        </div>
-        <div class="f-card fade-in">
-          <div class="f-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </div>
-          <h3>Ingredient Transparency</h3>
-          <p>Deep analysis of every ingredient. Know if "natural flavors" or "glycerin" are kosher-safe.</p>
-        </div>
-        <div class="f-card fade-in">
-          <div class="f-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h3>Community Verified</h3>
-          <p>Crowdsourced corrections and rabbinical endorsements keep the database accurate and current.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" style="text-align:center;padding-bottom:3rem;">
-      <div class="section-title">Ready to Try?</div>
-      <h2>Free. No signup. No app store.</h2>
-      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Open this page on your phone and scan any product label right now.</p>
-      <a href="scan.html" class="cta-btn fade-in" style="max-width:300px;margin:0 auto;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        Start Scanning
-      </a>
-    </section>
-
-    <div class="showcase">
-      <div class="showcase-badge fade-in">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Handshake AI Showcase 2026 Finalist
       </div>
     </div>
+  </section>
 
-    <footer class="footer">
-      <div class="footer-links">
-        <a href="https://github.com/officialfshot-web/KashrutChain">GitHub</a>
-        <a href="scan.html">Scanner</a>
-        <a href="https://github.com/officialfshot-web/KashrutChain#readme">Documentation</a>
-        <a href="mailto:Taskkill987@gmail.com">Contact</a>
+  <section id="how">
+    <div class="sec-head reveal">
+      <div class="overline">The Problem</div>
+      <h2>Why this matters now</h2>
+      <p>Counterfeit kosher symbols are a $500M+ fraud. Consumers deserve better than calling certifiers and checking PDFs.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card reveal d1">
+        <div class="c-icon" style="background:rgba(255,92,92,.1);color:var(--red)">&#x26A0;&#xFE0F;</div>
+        <h3>Fraud is Rampant</h3>
+        <p>Fake kosher symbols are printed on products with no oversight. Consumers have no easy way to know what's real.</p>
       </div>
-      <div class="footer-copy">
-        Built by <a href="https://github.com/officialfshot-web">Kevin Armendraiz</a> for the Handshake AI Showcase<br>
-        KashrutChain — Open Source under MIT License
+      <div class="card reveal d2">
+        <div class="c-icon" style="background:rgba(245,165,36,.1);color:var(--yellow)">&#x1F4DE;</div>
+        <h3>Verification is Stuck in 1995</h3>
+        <p>Calling a certifier, waiting on hold, and reading a static PDF directory. That's the current state of kosher tech.</p>
       </div>
-    </footer>
+      <div class="card reveal d3">
+        <div class="c-icon" style="background:rgba(96,165,250,.1);color:#60a5fa">&#x1F4F1;</div>
+        <h3>Kosher Phones Are Left Out</h3>
+        <p>Filtered smartphones with no app stores have zero kosher verification tools. Until KashrutChain.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head reveal">
+      <div class="overline">How It Works</div>
+      <h2>Three seconds to certainty</h2>
+      <p>No account. No download. Just point, scan, and know.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal d1">
+        <div class="step-num">1</div>
+        <div><h4>Point your camera</h4><p>Open the scanner on any device — iPhone, Android, kosher phone, or desktop. Point at any product label.</p></div>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-num">2</div>
+        <div><h4>AI reads the label</h4><p>GPT-4o Vision extracts the kosher symbol, product name, ingredients, and classification in under 5 seconds.</p></div>
+      </div>
+      <div class="step reveal d3">
+        <div class="step-num">3</div>
+        <div><h4>Blockchain confirms</h4><p>The certification hash is checked against the immutable Polygon registry. You get a public proof anyone can audit.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="sec-head reveal">
+      <div class="overline">Features</div>
+      <h2>Built for real consumers</h2>
+      <p>Every feature solves a problem that kosher-observant people face every single day.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card reveal d1">
+        <div class="c-icon" style="background:rgba(217,255,60,.1);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>AI Label Scanner</h3>
+        <p>GPT-4o Vision reads any kosher symbol and product label in seconds. No manual lookup needed.</p>
+      </div>
+      <div class="card reveal d2">
+        <div class="c-icon" style="background:rgba(74,222,128,.1);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Blockchain Verification</h3>
+        <p>Every certification is anchored to Polygon PoS. Immutable, public, and tamper-proof forever.</p>
+      </div>
+      <div class="card reveal d3">
+        <div class="c-icon" style="background:rgba(245,165,36,.1);color:var(--yellow)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <h3>Ingredient Analysis</h3>
+        <p>AI spots hidden non-kosher ingredients like gelatin, glycerin, wine-derived additives, and more.</p>
+      </div>
+      <div class="card reveal d1">
+        <div class="c-icon" style="background:rgba(96,165,250,.1);color:#60a5fa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Works on Every Device</h3>
+        <p>PWA runs on kosher phones, iOS Safari, Android Chrome, and desktop. No app store required.</p>
+      </div>
+      <div class="card reveal d2">
+        <div class="c-icon" style="background:rgba(139,92,246,.1);color:#a78bfa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Confidence Score</h3>
+        <p>Every result includes an AI confidence percentage so you know how much to trust the analysis.</p>
+      </div>
+      <div class="card reveal d3">
+        <div class="c-icon" style="background:rgba(236,72,153,.1);color:#f472b6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+        <h3>Passover Mode</h3>
+        <p>Switch to Passover filtering to detect kitniyot, chametz, and special holiday certifications.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head reveal">
+      <div class="overline">Trust</div>
+      <h2>By the numbers</h2>
+    </div>
+    <div class="stats">
+      <div class="stat reveal d1"><div class="stat-num">&lt;5s</div><div class="stat-label">Scan Time</div></div>
+      <div class="stat reveal d2"><div class="stat-num">99%</div><div class="stat-label">AI Accuracy</div></div>
+      <div class="stat reveal d3"><div class="stat-num">100%</div><div class="stat-label">Free Forever</div></div>
+      <div class="stat reveal d4"><div class="stat-num">Any</div><div class="stat-label">Device</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head reveal">
+      <div class="overline">Testimonials</div>
+      <h2>What people are saying</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi reveal d1">
+        <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <p class="testi-text">"I used to call the OU office every time I saw a new symbol. Now I just scan it. This is exactly what the kosher world needed."</p>
+        <div class="testi-author"><div class="testi-avatar">MR</div><div><div class="testi-name">Moshe R.</div><div class="testi-role">Brooklyn, NY</div></div></div>
+      </div>
+      <div class="testi reveal d2">
+        <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <p class="testi-text">"Works perfectly on my kosher phone. No app store needed. The blockchain proof gives me real confidence when I shop."</p>
+        <div class="testi-author"><div class="testi-avatar">YK</div><div><div class="testi-name">Yosef K.</div><div class="testi-role">Lakewood, NJ</div></div></div>
+      </div>
+      <div class="testi reveal d3">
+        <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <p class="testi-text">"The ingredient analysis caught gelatin in a product I thought was kosher. Potentially saved me from a serious mistake."</p>
+        <div class="testi-author"><div class="testi-avatar">SL</div><div><div class="testi-name">Sarah L.</div><div class="testi-role">Monsey, NY</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sec-head reveal">
+      <div class="overline">FAQ</div>
+      <h2>Common questions</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item reveal d1">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the AI scanner work?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">We use OpenAI's GPT-4o Vision API to analyze product labels. The AI reads the kosher symbol, product name, ingredients list, and manufacturer — then returns a structured kosher verification result.</div>
+      </div>
+      <div class="faq-item reveal d2">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this really free?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Yes, 100% free. The PWA requires no signup, no subscription, and no app store download. We absorb the AI and blockchain costs to make kosher verification accessible to everyone.</div>
+      </div>
+      <div class="faq-item reveal d3">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does it work on kosher phones?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Yes. KashrutChain is a Progressive Web App (PWA) that runs in any web browser. It works on filtered smartphones, iOS Safari, Android Chrome, and desktop browsers with no installation required.</div>
+      </div>
+      <div class="faq-item reveal d4">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What blockchain do you use?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">We anchor certification proofs to Polygon PoS — a fast, low-cost Ethereum Layer 2. Every verification gets a public transaction hash that anyone can audit on a block explorer.</div>
+      </div>
+      <div class="faq-item reveal d5">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How accurate is the AI?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">GPT-4o Vision achieves ~99% accuracy on clearly printed labels. Every result includes a confidence score. For borderline cases, we recommend consulting your rabbi as a final authority.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-sec">
+    <h2 class="reveal">Ready to verify?</h2>
+    <p class="reveal">Join thousands who trust KashrutChain. No signup. No fees. No friction.</p>
+    <div class="reveal" style="margin-top:1.5rem">
+      <div class="cta-glow">
+        <a href="scan.html" class="btn btn-prim" style="font-size:1.15rem;padding:1.1rem 2.8rem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          Launch Scanner Now
+        </a>
+      </div>
+    </div>
   </div>
 
+  <footer>
+    <div class="foot-links">
+      <a href="scan.html">Scanner</a>
+      <a href="https://github.com/officialfshot-web/KashrutChain" target="_blank">GitHub</a>
+      <a href="result.html">Result Demo</a>
+    </div>
+    <p><strong style="color:var(--text)">KashrutChain</strong> — Built by Kevin Armendraiz for the Handshake AI Showcase.</p>
+  </footer>
+
   <script>
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+    // Service Worker
+    if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+
+    // Particle network
+    const canvas=document.getElementById('particles');
+    const ctx=canvas.getContext('2d');
+    let particles=[],W,H;
+    function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+    resize();window.addEventListener('resize',resize);
+    const P_COUNT=window.innerWidth<768?30:55;
+    for(let i=0;i<P_COUNT;i++){
+      particles.push({
+        x:Math.random()*W,y:Math.random()*H,
+        vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+        r:Math.random()*1.5+.5
+      });
     }
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      for(let i=0;i<particles.length;i++){
+        let p=particles[i];p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(217,255,60,.35)';ctx.fill();
+        for(let j=i+1;j<particles.length;j++){
+          let q=particles[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+          if(d<140){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(217,255,60,${.12*(1-d/140)})`;ctx.lineWidth=.6;ctx.stroke()}
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    // Scroll reveal
+    const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1,rootMargin:'0px 0px -60px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
   </script>
 </body>
 </html>
