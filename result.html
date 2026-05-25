@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Result — KashrutChain</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .back { color: #94a3b8; text-decoration: none; font-size: 1.2rem; }
+    .badge {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .badge.verified { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge.fraud { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge.warning { background: rgba(234, 179, 8, 0.15); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .card-title { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+    .card-value { font-size: 1.1rem; font-weight: 600; }
+    .ingredient {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #334155;
+    }
+    .ingredient:last-child { border-bottom: none; }
+    .ing-name { font-size: 0.95rem; }
+    .ing-status {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .safe { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .caution { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+    .forbidden { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .blockchain {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #22c55e;
+      word-break: break-all;
+    }
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .btn-primary { background: #22c55e; color: white; }
+    .btn-secondary { background: #334155; color: white; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="scan.html" class="back">&larr;</a>
+    <span style="font-weight:600">Verification Result</span>
+  </div>
+
+  <div id="content"></div>
+
+  <script>
+    const result = JSON.parse(sessionStorage.getItem('scanResult') || '{}');
+    const content = document.getElementById('content');
+
+    if (!result.product) {
+      content.innerHTML = '<div style="text-align:center;color:#94a3b8;margin-top:4rem;">No scan found. <a href="scan.html" style="color:#22c55e">Scan a product</a></div>';
+    } else {
+      const badgeClass = result.isValid ? 'verified' : 'fraud';
+      const badgeText = result.isValid ? '✅ VERIFIED ON BLOCKCHAIN' : '❌ NOT REGISTERED';
+
+      let ingredientsHtml = result.ingredients.map(ing => {
+        const statusClass = ing.status;
+        const statusText = ing.status.toUpperCase();
+        const reason = ing.reason ? ` <span style="color:#64748b;font-size:0.8rem">— ${ing.reason}</span>` : '';
+        return `<div class="ingredient"><span class="ing-name">${ing.name}${reason}</span><span class="ing-status ${statusClass}">${statusText}</span></div>`;
+      }).join('');
+
+      content.innerHTML = `
+        <div class="badge ${badgeClass}">${badgeText}</div>
+        
+        <div class="card">
+          <div class="card-title">Product</div>
+          <div class="card-value">${result.product}</div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Kosher Symbol</div>
+          <div class="card-value">${result.symbol} — ${result.certifier}</div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Classification</div>
+          <div class="card-value">${result.classification.toUpperCase()}</div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Ingredients</div>
+          ${ingredientsHtml}
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Blockchain Proof</div>
+          <div class="blockchain">${result.txHash}</div>
+          <div style="margin-top:0.5rem;font-size:0.8rem;color:#64748b">
+            Verified on Polygon PoS. <a href="${result.explorerUrl}" target="_blank" style="color:#22c55e">View on explorer &rarr;</a>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="location.href='scan.html'">Scan Another</button>
+        <button class="btn btn-secondary" onclick="alert('Share feature coming soon!')">Share Result</button>
+      `;
+    }
+  </script>
+</body>
+</html>

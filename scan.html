@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan — KashrutChain</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #334155;
+    }
+    .back { color: #94a3b8; text-decoration: none; font-size: 1.2rem; }
+    .title { font-weight: 600; }
+    .camera-container {
+      flex: 1;
+      position: relative;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .scan-frame {
+      width: 280px;
+      height: 200px;
+      border: 2px solid rgba(34, 197, 94, 0.6);
+      border-radius: 12px;
+      position: relative;
+    }
+    .scan-frame::before,
+    .scan-frame::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: #22c55e;
+      border-style: solid;
+    }
+    .scan-frame::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; }
+    .scan-frame::after { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; }
+    .controls {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .btn {
+      padding: 1rem;
+      border-radius: 12px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-primary { background: #22c55e; color: white; }
+    .btn-secondary { background: #334155; color: white; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .status {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      min-height: 1.5rem;
+    }
+    #preview { display: none; width: 100%; border-radius: 8px; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back">&larr;</a>
+    <span class="title">Scan Product Label</span>
+  </div>
+  
+  <div class="camera-container">
+    <video id="video" autoplay playsinline></video>
+    <div class="overlay">
+      <div class="scan-frame"></div>
+    </div>
+  </div>
+  
+  <div class="controls">
+    <img id="preview" alt="Captured label">
+    <div class="status" id="status">Position label inside the frame</div>
+    <button class="btn btn-primary" id="capture">Capture & Analyze</button>
+    <button class="btn btn-secondary" id="gallery">Choose from Gallery</button>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;">
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('capture');
+    const galleryBtn = document.getElementById('gallery');
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const status = document.getElementById('status');
+
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: 'environment' } 
+        });
+        video.srcObject = stream;
+        status.textContent = 'Camera ready. Position label in frame.';
+      } catch (err) {
+        status.textContent = 'Camera blocked. Use gallery instead.';
+        captureBtn.disabled = true;
+      }
+    }
+
+    startCamera();
+
+    captureBtn.addEventListener('click', () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 1280;
+      canvas.height = video.videoHeight || 720;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      const imageData = canvas.toDataURL('image/jpeg');
+      processImage(imageData);
+    });
+
+    galleryBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => processImage(event.target.result);
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function processImage(imageData) {
+      preview.src = imageData;
+      preview.style.display = 'block';
+      captureBtn.disabled = true;
+      galleryBtn.disabled = true;
+      status.textContent = 'Analyzing with AI + Blockchain...';
+      status.style.color = '#22c55e';
+
+      setTimeout(() => {
+        const isValid = Math.random() > 0.3;
+        const mockResult = {
+          isValid: isValid,
+          symbol: isValid ? 'OU-D' : 'FAKE-K',
+          certifier: isValid ? 'Orthodox Union' : 'Unknown',
+          product: 'Sample Product',
+          ingredients: [
+            { name: 'Enriched flour', status: 'safe' },
+            { name: 'Cheddar cheese', status: 'safe' },
+            { name: 'Natural flavors', status: 'caution', reason: 'Source unknown' },
+            { name: 'Maltodextrin', status: 'safe' }
+          ],
+          classification: 'dairy',
+          txHash: '0x' + Math.random().toString(36).substring(2, 14) + Math.random().toString(36).substring(2, 14),
+          explorerUrl: 'https://mumbai.polygonscan.com/tx/0x'
+        };
+        sessionStorage.setItem('scanResult', JSON.stringify(mockResult));
+        window.location.href = 'result.html';
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
