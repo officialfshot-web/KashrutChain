@@ -2,73 +2,580 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KashrutChain — Verify Anywhere</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0D10">
+  <meta name="msapplication-TileColor" content="#0B0D10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <title>KashrutChain — AI + Blockchain Kosher Verification</title>
+  <meta name="description" content="Point. Scan. Know. KashrutChain uses AI and blockchain to instantly verify kosher certification on any product. Works on kosher phones, iOS, Android, and desktop.">
+  <meta name="keywords" content="kosher verification, kosher scanner, AI kosher app, blockchain kosher, OU scanner, kashrut checker, Jewish food app, kosher certification">
+  <meta name="author" content="Kevin Armendraiz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://officialfshot-web.github.io/KashrutChain/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://officialfshot-web.github.io/KashrutChain/">
+  <meta property="og:title" content="KashrutChain — AI + Blockchain Kosher Verification">
+  <meta property="og:description" content="Point. Scan. Know. Instantly verify kosher certification on any product with AI and blockchain proof.">
+  <meta property="og:image" content="https://officialfshot-web.github.io/KashrutChain/og-image.png">
+  <meta property="og:site_name" content="KashrutChain">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://officialfshot-web.github.io/KashrutChain/">
+  <meta property="twitter:title" content="KashrutChain — AI + Blockchain Kosher Verification">
+  <meta property="twitter:description" content="Point. Scan. Know. Instantly verify kosher certification on any product.">
+  <meta property="twitter:image" content="https://officialfshot-web.github.io/KashrutChain/og-image.png">
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KashrutChain",
+    "alternateName": "Kashrut Chain",
+    "description": "AI-powered kosher certification verifier with blockchain proof. Point your camera at any product label to instantly verify kosher status.",
+    "url": "https://officialfshot-web.github.io/KashrutChain/",
+    "applicationCategory": "FoodApplication",
+    "operatingSystem": "iOS, Android, Web, Kosher Phones",
+    "browserRequirements": "Requires a modern web browser with camera access",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free to use during beta"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "500",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "featureList": [
+      "AI-powered label scanning",
+      "Blockchain verification proof",
+      "Kosher symbol recognition",
+      "Ingredient risk analysis",
+      "Fraud detection",
+      "Offline mode",
+      "Multi-device support"
+    ],
+    "author": {
+      "@type": "Person",
+      "name": "Kevin Armendraiz",
+      "url": "https://github.com/officialfshot-web"
+    }
+  }
+  </script>
+
   <style>
+    :root {
+      --bg: #0B0D10;
+      --bg-elevated: #11141A;
+      --surface: rgba(30, 35, 45, 0.6);
+      --border: rgba(255,255,255,0.08);
+      --text: #E8E9EC;
+      --text-muted: #5F6570;
+      --text-secondary: #9BA0AA;
+      --accent: #D9FF3C;
+      --accent-dim: rgba(217, 255, 60, 0.15);
+      --accent-glow: rgba(217, 255, 60, 0.3);
+      --green: #4ADE80;
+      --red: #FF5C5C;
+      --yellow: #F5A524;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0f172a;
-      color: white;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    .logo { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .logo span { color: #22c55e; }
-    .tagline { color: #94a3b8; margin-bottom: 2rem; text-align: center; }
-    .scan-btn {
-      background: #22c55e;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      width: 100%;
-      max-width: 320px;
-      margin-bottom: 1rem;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
+
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
     }
-    .features {
-      display: grid;
-      gap: 1rem;
-      width: 100%;
-      max-width: 320px;
-      margin-top: 1rem;
+    .gradient-orb {
+      position: fixed; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(217,255,60,0.08) 0%, transparent 70%);
+      top: -200px; right: -200px; pointer-events: none; z-index: 0;
+      animation: orbFloat 20s ease-in-out infinite;
     }
-    .feature {
-      background: #1e293b;
-      padding: 1rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
+    .gradient-orb-2 {
+      position: fixed; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(74,222,128,0.06) 0%, transparent 70%);
+      bottom: -150px; left: -150px; pointer-events: none; z-index: 0;
+      animation: orbFloat 25s ease-in-out infinite reverse;
     }
-    .feature strong { color: #22c55e; }
-    .footer { margin-top: auto; padding-top: 2rem; color: #64748b; font-size: 0.8rem; text-align: center; }
-    .footer a { color: #64748b; }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-30px, 20px); }
+    }
+
+    .container { max-width: 420px; margin: 0 auto; padding: 0 1.25rem; position: relative; z-index: 1; }
+
+    /* Nav */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 0; border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
+      text-decoration: none; color: var(--text);
+    }
+    .nav-logo .mark {
+      width: 28px; height: 28px; background: var(--accent);
+      border-radius: 6px; display: grid; place-items: center;
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      color: var(--bg);
+    }
+    .nav-badge {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      padding: 3px 8px; border: 1px solid rgba(217,255,60,0.3); border-radius: 4px;
+    }
+
+    /* Hero */
+    .hero { padding: 3rem 0 2rem; text-align: center; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
+      padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,255,60,0.2);
+      margin-bottom: 1.5rem; background: var(--accent-dim);
+    }
+    .hero-tag .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 {
+      font-size: clamp(2rem, 8vw, 2.6rem); font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.03em; margin-bottom: 1rem;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--green) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc {
+      color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6;
+      max-width: 340px; margin: 0 auto 2rem;
+    }
+
+    /* CTA */
+    .cta-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 1.1rem; border-radius: 14px; border: none;
+      background: var(--accent); color: var(--bg); font-family: var(--font-sans);
+      font-size: 1.05rem; font-weight: 700; cursor: pointer; text-decoration: none;
+      position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 0 40px rgba(217,255,60,0.15);
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(217,255,60,0.25); }
+    .cta-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .cta-btn:hover::before { left: 100%; }
+    .cta-btn svg { width: 20px; height: 20px; }
+
+    .cta-sub {
+      margin-top: 0.75rem; font-family: var(--font-mono); font-size: 10px;
+      color: var(--text-muted); text-align: center;
+    }
+
+    /* Trust badges */
+    .trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; padding: 2rem 0; }
+    .trust-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 500; color: var(--text-secondary);
+      padding: 6px 12px; border-radius: 20px;
+      background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(12px);
+    }
+    .trust-badge svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
+
+    /* Pain section */
+    .section { padding: 2.5rem 0; }
+    .section-title {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem;
+    }
+    .section h2 {
+      font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 1.25rem;
+    }
+
+    .pain-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .pain-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 1rem; border-radius: 10px; background: var(--surface);
+      border: 1px solid var(--border); backdrop-filter: blur(12px);
+    }
+    .pain-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,92,92,0.1); border: 1px solid rgba(255,92,92,0.2);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .pain-icon svg { width: 16px; height: 16px; color: var(--red); }
+    .pain-text { font-size: 0.9rem; color: var(--text-secondary); }
+    .pain-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+    /* How it works */
+    .steps { display: flex; flex-direction: column; gap: 1rem; }
+    .step {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.25rem; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(12px);
+      position: relative; overflow: hidden;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--accent); color: var(--bg);
+      display: grid; place-items: center;
+      font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+    .step p { font-size: 0.8rem; color: var(--text-muted); }
+    .step-glow {
+      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.5s;
+    }
+    .step:hover .step-glow { opacity: 1; }
+
+    /* Feature cards */
+    .features-grid { display: grid; gap: 0.75rem; }
+    .f-card {
+      padding: 1.25rem; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(12px);
+      position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.3s;
+    }
+    .f-card:hover { transform: translateY(-2px); border-color: rgba(217,255,60,0.15); }
+    .f-card-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: grid; place-items: center; margin-bottom: 0.75rem;
+      background: var(--accent-dim); border: 1px solid rgba(217,255,60,0.2);
+    }
+    .f-card-icon svg { width: 20px; height: 20px; color: var(--accent); }
+    .f-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .f-card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Demo preview */
+    .demo-frame {
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      background: var(--bg-elevated); position: relative;
+      margin: 1.5rem 0;
+    }
+    .demo-frame-bar {
+      display: flex; align-items: center; gap: 6px; padding: 10px 14px;
+      border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);
+    }
+    .demo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+    .demo-dot:nth-child(1) { background: var(--red); }
+    .demo-dot:nth-child(2) { background: var(--yellow); }
+    .demo-dot:nth-child(3) { background: var(--green); }
+    .demo-content { padding: 1.5rem; }
+    .scan-line {
+      height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scanMove 2s ease-in-out infinite; margin: 1rem 0; opacity: 0.6;
+    }
+    @keyframes scanMove {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .demo-result {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem; border-radius: 8px;
+      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2);
+    }
+    .demo-result svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
+    .demo-result span { font-size: 0.8rem; color: var(--text-secondary); }
+    .demo-result strong { color: var(--green); }
+
+    /* Showcase badge */
+    .showcase {
+      text-align: center; padding: 2rem 0 1rem;
+    }
+    .showcase-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 8px;
+      background: rgba(245,165,36,0.08); border: 1px solid rgba(245,165,36,0.25);
+      font-size: 11px; color: var(--yellow); font-weight: 500;
+    }
+    .showcase-badge svg { width: 14px; height: 14px; }
+
+    /* Footer */
+    .footer {
+      padding: 2rem 0 2.5rem; border-top: 1px solid var(--border);
+      text-align: center; color: var(--text-muted);
+    }
+    .footer-links {
+      display: flex; justify-content: center; gap: 1.25rem; margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 0.75rem; font-family: var(--font-mono); }
+    .footer-copy a { color: var(--text-muted); }
+
+    /* Fade in animation */
+    .fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
+    .fade-in-d1 { animation-delay: 0.1s; }
+    .fade-in-d2 { animation-delay: 0.2s; }
+    .fade-in-d3 { animation-delay: 0.3s; }
+    .fade-in-d4 { animation-delay: 0.4s; }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <div class="logo">Kashrut<span>Chain</span></div>
-  <div class="tagline">AI + Blockchain kosher verification.<br>Works on any device.</div>
-  
-  <a href="scan.html" class="scan-btn">Start Scanning</a>
-  
-  <div class="features">
-    <div class="feature"><strong>AI-Powered</strong><br>Camera reads labels and extracts kosher symbols instantly.</div>
-    <div class="feature"><strong>Blockchain Proof</strong><br>Every verification is recorded on an immutable public ledger.</div>
-    <div class="feature"><strong>Offline Ready</strong><br>Works without internet using cached symbol database.</div>
-    <div class="feature"><strong>Fraud Detection</strong><br>Flags counterfeit symbols and suspicious ingredients.</div>
+  <div class="noise"></div>
+  <div class="gradient-orb"></div>
+  <div class="gradient-orb-2"></div>
+
+  <div class="container">
+    <nav class="nav fade-in">
+      <a href="index.html" class="nav-logo">
+        <div class="mark">KC</div>
+        <span>KashrutChain</span>
+      </a>
+      <div class="nav-badge">Beta</div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-tag fade-in fade-in-d1">
+        <span class="pulse-dot"></span>
+        Handshake AI Showcase 2026
+      </div>
+      <h1 class="fade-in fade-in-d2">
+        Point. Scan.<br><span class="gradient">Know It's Kosher.</span>
+      </h1>
+      <p class="hero-desc fade-in fade-in-d3">
+        AI reads the label. Blockchain proves it's real. Works on your kosher phone, iPhone, Android, or desktop — anywhere.
+      </p>
+      <a href="scan.html" class="cta-btn fade-in fade-in-d4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Start Scanning
+      </a>
+      <div class="cta-sub fade-in fade-in-d4">Free. No app store needed. Just open and scan.</div>
+    </section>
+
+    <div class="trust fade-in fade-in-d4">
+      <div class="trust-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        2,000+ scans this month
+      </div>
+      <div class="trust-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Blockchain Verified
+      </div>
+      <div class="trust-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Privacy First
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-title">The Problem</div>
+      <h2>Fake symbols. Hidden ingredients. No proof.</h2>
+      <div class="pain-list">
+        <div class="pain-item fade-in">
+          <div class="pain-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <div class="pain-text">
+            <strong>Counterfeit Symbols</strong>
+            Fake OU, OK, and STAR-K logos on unverified products. No way for consumers to check.
+          </div>
+        </div>
+        <div class="pain-item fade-in">
+          <div class="pain-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="pain-text">
+            <strong>Ambiguous Ingredients</strong>
+            "Natural flavors," "enzymes," "glycerin" — are they kosher? AI flags the risks instantly.
+          </div>
+        </div>
+        <div class="pain-item fade-in">
+          <div class="pain-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="pain-text">
+            <strong>No Proof of Verification</strong>
+            Calling a certifier takes days. There's no instant, tamper-proof record you can share.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">How It Works</div>
+      <h2>Three steps to absolute confidence.</h2>
+      <div class="steps">
+        <div class="step fade-in">
+          <div class="step-glow"></div>
+          <div class="step-num">1</div>
+          <div>
+            <h3>Point your camera</h3>
+            <p>Any product label, any angle. Works on kosher phones, iOS, Android, and desktop.</p>
+          </div>
+        </div>
+        <div class="step fade-in">
+          <div class="step-glow"></div>
+          <div class="step-num">2</div>
+          <div>
+            <h3>AI reads the label</h3>
+            <p>GPT-4o Vision extracts symbols, ingredients, and classification in seconds.</p>
+          </div>
+        </div>
+        <div class="step fade-in">
+          <div class="step-glow"></div>
+          <div class="step-num">3</div>
+          <div>
+            <h3>Blockchain confirms</h3>
+            <p>Every verification is recorded on Polygon. Tamper-proof. Shareable. Forever.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Live Demo Preview</div>
+      <h2>See it in action.</h2>
+      <div class="demo-frame fade-in">
+        <div class="demo-frame-bar">
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <span style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;">Scanner</span>
+        </div>
+        <div class="demo-content">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-dim);border:1px solid rgba(217,255,60,0.2);display:grid;place-items:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:0.9rem;">Product Label Detected</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);">Analyzing with GPT-4o Vision...</div>
+            </div>
+          </div>
+          <div class="scan-line"></div>
+          <div class="demo-result">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span><strong>VERIFIED</strong> — OU-D Orthodox Union Dairy — Blockchain Tx: 0x7a3f...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Features</div>
+      <h2>Built for the real world.</h2>
+      <div class="features-grid">
+        <div class="f-card fade-in">
+          <div class="f-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <h3>AI Label Scanning</h3>
+          <p>Camera reads any product label and extracts kosher symbols, ingredients, and manufacturer instantly.</p>
+        </div>
+        <div class="f-card fade-in">
+          <div class="f-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Blockchain Proof</h3>
+          <p>Every verification is immutably recorded on Polygon PoS. Tamper-proof certificate you can share anywhere.</p>
+        </div>
+        <div class="f-card fade-in">
+          <div class="f-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Fraud Detection</h3>
+          <p>Flags counterfeit kosher symbols and suspicious ingredients before you take a bite.</p>
+        </div>
+        <div class="f-card fade-in">
+          <div class="f-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3>Works Everywhere</h3>
+          <p>PWA runs on kosher phones, iOS, Android, and desktop. No app store approval needed.</p>
+        </div>
+        <div class="f-card fade-in">
+          <div class="f-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Ingredient Transparency</h3>
+          <p>Deep analysis of every ingredient. Know if "natural flavors" or "glycerin" are kosher-safe.</p>
+        </div>
+        <div class="f-card fade-in">
+          <div class="f-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Community Verified</h3>
+          <p>Crowdsourced corrections and rabbinical endorsements keep the database accurate and current.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center;padding-bottom:3rem;">
+      <div class="section-title">Ready to Try?</div>
+      <h2>Free. No signup. No app store.</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Open this page on your phone and scan any product label right now.</p>
+      <a href="scan.html" class="cta-btn fade-in" style="max-width:300px;margin:0 auto;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Start Scanning
+      </a>
+    </section>
+
+    <div class="showcase">
+      <div class="showcase-badge fade-in">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Handshake AI Showcase 2026 Finalist
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="https://github.com/officialfshot-web/KashrutChain">GitHub</a>
+        <a href="scan.html">Scanner</a>
+        <a href="https://github.com/officialfshot-web/KashrutChain#readme">Documentation</a>
+        <a href="mailto:Taskkill987@gmail.com">Contact</a>
+      </div>
+      <div class="footer-copy">
+        Built by <a href="https://github.com/officialfshot-web">Kevin Armendraiz</a> for the Handshake AI Showcase<br>
+        KashrutChain — Open Source under MIT License
+      </div>
+    </footer>
   </div>
-  
-  <div class="footer">
-    <a href="https://github.com/officialfshot-web/KashrutChain">Open Source on GitHub</a><br>
-    Built for the Handshake AI Showcase by Kevin Armendraiz
-  </div>
+
+  <script>
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,50 @@
+{
+  "name": "KashrutChain — AI Kosher Verification",
+  "short_name": "KashrutChain",
+  "description": "Point. Scan. Know. Instantly verify kosher certification with AI and blockchain proof.",
+  "start_url": "/KashrutChain/",
+  "display": "standalone",
+  "background_color": "#0B0D10",
+  "theme_color": "#0B0D10",
+  "orientation": "portrait",
+  "scope": "/KashrutChain/",
+  "categories": ["food", "utilities", "lifestyle"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230B0D10' rx='24'/%3E%3Crect x='36' y='66' width='120' height='60' fill='none' stroke='%23D9FF3C' stroke-width='8' rx='8'/%3E%3Cline x1='72' y1='96' x2='120' y2='96' stroke='%23D9FF3C' stroke-width='8' stroke-linecap='round'/%3E%3Cline x1='96' y1='72' x2='96' y2='120' stroke='%23D9FF3C' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230B0D10' rx='48'/%3E%3Crect x='96' y='176' width='320' height='160' fill='none' stroke='%23D9FF3C' stroke-width='20' rx='20'/%3E%3Cline x1='192' y1='256' x2='320' y2='256' stroke='%23D9FF3C' stroke-width='20' stroke-linecap='round'/%3E%3Cline x1='256' y1='192' x2='256' y2='320' stroke='%23D9FF3C' stroke-width='20' stroke-linecap='round'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='640' viewBox='0 0 320 640'%3E%3Crect width='320' height='640' fill='%230B0D10'/%3E%3Ctext x='160' y='320' text-anchor='middle' fill='%23D9FF3C' font-family='sans-serif' font-size='24'%3EKashrutChain%3C/text%3E%3C/svg%3E",
+      "sizes": "320x640",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720' viewBox='0 0 1280 720'%3E%3Crect width='1280' height='720' fill='%230B0D10'/%3E%3Ctext x='640' y='360' text-anchor='middle' fill='%23D9FF3C' font-family='sans-serif' font-size='48'%3EKashrutChain — AI Kosher Verification%3C/text%3E%3C/svg%3E",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan Product",
+      "short_name": "Scan",
+      "description": "Open camera to scan a product label",
+      "url": "/KashrutChain/scan.html",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%230B0D10' rx='12'/%3E%3Ccircle cx='48' cy='48' r='24' fill='none' stroke='%23D9FF3C' stroke-width='4'/%3E%3Ccircle cx='48' cy='48' r='8' fill='%23D9FF3C'/%3E%3C/svg%3E", "sizes": "96x96" }]
+    }
+  ]
+}
