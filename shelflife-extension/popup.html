@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShelfLife</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">🥬</span>
+        <span class="logo-text">ShelfLife</span>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill" id="expiring-badge">
+          <span class="pulse-dot"></span>
+          <span id="expiring-count">0</span> expiring
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-tab="inventory">
+        <span class="tab-icon">📦</span>
+        <span>Pantry</span>
+      </button>
+      <button class="tab-btn" data-tab="recipes">
+        <span class="tab-icon">🍳</span>
+        <span>Recipes</span>
+      </button>
+      <button class="tab-btn" data-tab="dashboard">
+        <span class="tab-icon">📊</span>
+        <span>Insights</span>
+      </button>
+      <button class="tab-btn" data-tab="add">
+        <span class="tab-icon">+</span>
+        <span>Add</span>
+      </button>
+    </nav>
+
+    <!-- Inventory Tab -->
+    <section id="tab-inventory" class="tab-content active">
+      <div class="tab-header">
+        <h2>My Pantry & Fridge</h2>
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="produce">Produce</button>
+          <button class="filter-btn" data-filter="dairy">Dairy</button>
+          <button class="filter-btn" data-filter="meat">Meat</button>
+          <button class="filter-btn" data-filter="pantry">Pantry</button>
+          <button class="filter-btn" data-filter="frozen">Frozen</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <input type="text" id="inventory-search" placeholder="Search items...">
+      </div>
+      <div id="inventory-list" class="item-list"></div>
+      <div id="inventory-empty" class="empty-state hidden">
+        <div class="empty-icon">🍽️</div>
+        <p>Your pantry is empty</p>
+        <button class="btn-primary" onclick="switchTab('add')">Add your first item</button>
+      </div>
+    </section>
+
+    <!-- Recipes Tab -->
+    <section id="tab-recipes" class="tab-content">
+      <div class="tab-header">
+        <h2>Smart Recipe Picks</h2>
+        <p class="subtitle">Based on what you have & what's expiring soon</p>
+      </div>
+      <div class="recipe-filters">
+        <button class="chip active" data-recipe-filter="smart">🧠 Smart Match</button>
+        <button class="chip" data-recipe-filter="expiring">⏰ Use It Up</button>
+        <button class="chip" data-recipe-filter="all">🌍 Browse All</button>
+      </div>
+      <div id="recipes-list" class="recipe-list"></div>
+      <div id="recipes-empty" class="empty-state hidden">
+        <div class="empty-icon">🍳</div>
+        <p>No recipes found for your current items</p>
+        <button class="btn-primary" onclick="switchTab('add')">Add more ingredients</button>
+      </div>
+    </section>
+
+    <!-- Dashboard Tab -->
+    <section id="tab-dashboard" class="tab-content">
+      <div class="tab-header">
+        <h2>Insights</h2>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-card stat-highlight">
+          <div class="dash-label">Items Tracked</div>
+          <div class="dash-value" id="dash-total">0</div>
+        </div>
+        <div class="dash-card stat-highlight accent">
+          <div class="dash-label">Expiring Soon</div>
+          <div class="dash-value" id="dash-expiring">0</div>
+        </div>
+        <div class="dash-card stat-highlight success">
+          <div class="dash-label">Waste Prevented</div>
+          <div class="dash-value" id="dash-waste">$0</div>
+        </div>
+        <div class="dash-card stat-highlight info">
+          <div class="dash-label">Recipes Made</div>
+          <div class="dash-value" id="dash-recipes">0</div>
+        </div>
+      </div>
+      <div class="dash-section">
+        <h3>Expiry Timeline</h3>
+        <div id="expiry-timeline" class="timeline"></div>
+      </div>
+      <div class="dash-section">
+        <h3>Smart Suggestions</h3>
+        <div id="smart-suggestions" class="suggestion-list"></div>
+      </div>
+    </section>
+
+    <!-- Add Item Tab -->
+    <section id="tab-add" class="tab-content">
+      <div class="tab-header">
+        <h2>Add Item</h2>
+      </div>
+      <div class="quick-add-section">
+        <h3>Quick Add Templates</h3>
+        <div class="quick-add-grid">
+          <button class="quick-add-btn" data-name="Milk" data-days="7" data-category="dairy">
+            <span>🥛</span>
+            <span>Milk</span>
+            <small>7 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Eggs" data-days="21" data-category="dairy">
+            <span>🥚</span>
+            <span>Eggs</span>
+            <small>3 weeks</small>
+          </button>
+          <button class="quick-add-btn" data-name="Bread" data-days="5" data-category="pantry">
+            <span>🍞</span>
+            <span>Bread</span>
+            <small>5 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Chicken Breast" data-days="2" data-category="meat">
+            <span>🍗</span>
+            <span>Chicken</span>
+            <small>2 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Spinach" data-days="5" data-category="produce">
+            <span>🥬</span>
+            <span>Spinach</span>
+            <small>5 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Yogurt" data-days="10" data-category="dairy">
+            <span>🥣</span>
+            <span>Yogurt</span>
+            <small>10 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Tomatoes" data-days="7" data-category="produce">
+            <span>🍅</span>
+            <span>Tomatoes</span>
+            <small>7 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Cheese" data-days="14" data-category="dairy">
+            <span>🧀</span>
+            <span>Cheese</span>
+            <small>2 weeks</small>
+          </button>
+          <button class="quick-add-btn" data-name="Ground Beef" data-days="2" data-category="meat">
+            <span>🥩</span>
+            <span>Ground Beef</span>
+            <small>2 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Bananas" data-days="5" data-category="produce">
+            <span>🍌</span>
+            <span>Bananas</span>
+            <small>5 days</small>
+          </button>
+          <button class="quick-add-btn" data-name="Pasta" data-days="365" data-category="pantry">
+            <span>🍝</span>
+            <span>Pasta</span>
+            <small>1 year</small>
+          </button>
+          <button class="quick-add-btn" data-name="Rice" data-days="365" data-category="pantry">
+            <span>🍚</span>
+            <span>Rice</span>
+            <small>1 year</small>
+          </button>
+        </div>
+      </div>
+      <div class="custom-add-section">
+        <h3>Custom Item</h3>
+        <form id="add-item-form">
+          <div class="form-group">
+            <label>Item Name</label>
+            <input type="text" id="item-name" placeholder="e.g., Avocado" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <select id="item-category">
+                <option value="produce">Produce</option>
+                <option value="dairy">Dairy</option>
+                <option value="meat">Meat</option>
+                <option value="pantry">Pantry</option>
+                <option value="frozen">Frozen</option>
+                <option value="beverages">Beverages</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="text" id="item-quantity" placeholder="e.g., 3">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expiry Date</label>
+              <input type="date" id="item-expiry" required>
+            </div>
+            <div class="form-group">
+              <label>Est. Value ($)</label>
+              <input type="number" id="item-value" placeholder="5.00" step="0.01" min="0">
+            </div>
+          </div>
+          <button type="submit" class="btn-primary btn-full">
+            <span class="btn-icon">+</span> Add to Pantry
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- Recipe Detail Modal -->
+  <div id="recipe-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div id="recipe-detail"></div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="confetti-layer"></canvas>
+
+  <script src="recipeApi.js"></script>
+  <script src="recipes.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
