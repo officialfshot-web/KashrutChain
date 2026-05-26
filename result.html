@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <title>Result — KashrutChain Verification</title>
-  <meta name="description" content="View your kosher verification result with AI analysis, ingredient breakdown, and blockchain proof.">
+  <title>Ingredient Analysis — KashrutChain</title>
+  <meta name="description" content="Ingredient analysis tool for kosher research. Checks ingredient lists only — does not certify kosher status.">
   <link rel="canonical" href="https://officialfshot-web.github.io/KashrutChain/result.html">
   <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -71,10 +71,7 @@
     @keyframes badgeReveal {
       to { opacity: 1; transform: scale(1); }
     }
-    .result-badge.verified {
-      background: var(--green-dim); border: 1px solid rgba(74,222,128,0.25);
-    }
-    .result-badge.fraud {
+    .result-badge.flagged {
       background: var(--red-dim); border: 1px solid rgba(255,92,92,0.25);
     }
     .result-badge.warning {
@@ -84,19 +81,17 @@
       width: 48px; height: 48px; border-radius: 14px;
       display: grid; place-items: center; margin: 0 auto 0.75rem;
     }
-    .result-badge.verified .icon { background: rgba(74,222,128,0.15); }
-    .result-badge.fraud .icon { background: rgba(255,92,92,0.15); }
+    .result-badge.flagged .icon { background: rgba(255,92,92,0.15); }
     .result-badge.warning .icon { background: rgba(245,165,36,0.15); }
     .result-badge .icon svg { width: 24px; height: 24px; }
-    .result-badge.verified .icon svg { color: var(--green); }
-    .result-badge.fraud .icon svg { color: var(--red); }
+    .result-badge.flagged .icon svg { color: var(--red); }
     .result-badge.warning .icon svg { color: var(--yellow); }
     .result-badge h2 {
       font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem;
     }
-    .result-badge.verified h2 { color: var(--green); }
-    .result-badge.fraud h2 { color: var(--red); }
+    .result-badge.flagged h2 { color: var(--red); }
     .result-badge.warning h2 { color: var(--yellow); }
+    .result-badge.unknown h2 { color: var(--text-muted); }
     .result-badge p {
       font-size: 0.8rem; color: var(--text-muted);
       font-family: var(--font-mono); letter-spacing: 0.05em;
@@ -154,46 +149,6 @@
     .ing-status.unknown { background: var(--border); color: var(--text-muted); border: 1px solid var(--border); }
     .ing-reason { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* Blockchain card */
-    .blockchain-card { position: relative; overflow: hidden; }
-    .blockchain-card::before {
-      content: ''; position: absolute; top: 0; right: 0; width: 120px; height: 120px;
-      background: radial-gradient(circle, rgba(74,222,128,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .tx-hash {
-      font-family: var(--font-mono); font-size: 0.8rem; color: var(--green);
-      word-break: break-all; margin-top: 0.5rem; line-height: 1.4;
-    }
-    .tx-actions {
-      display: flex; gap: 0.5rem; margin-top: 0.75rem;
-    }
-    .tx-action {
-      display: flex; align-items: center; gap: 0.4rem;
-      padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03); color: var(--text-secondary);
-      font-size: 0.75rem; font-weight: 500; cursor: pointer;
-      transition: background 0.2s, color 0.2s; text-decoration: none;
-    }
-    .tx-action:hover { background: rgba(255,255,255,0.06); color: var(--text); }
-    .tx-action svg { width: 14px; height: 14px; }
-
-    /* Confidence bar */
-    .confidence {
-      display: flex; align-items: center; gap: 0.75rem; margin-top: 0.75rem;
-    }
-    .confidence-bar {
-      flex: 1; height: 4px; border-radius: 2px; background: var(--border); overflow: hidden;
-    }
-    .confidence-fill {
-      height: 100%; border-radius: 2px; background: var(--green);
-      transition: width 1s ease;
-    }
-    .confidence-text {
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
-      white-space: nowrap;
-    }
-
     /* Buttons */
     .actions {
       display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;
@@ -238,6 +193,24 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
+    /* Disclaimer */
+    .disclaimer-card {
+      background: rgba(245,165,36,0.06);
+      border: 1px solid rgba(245,165,36,0.2);
+    }
+    .disclaimer-card .card-title { color: var(--yellow); margin-bottom: 0.5rem; }
+    .disclaimer-text {
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    }
+    .disclaimer-text strong { color: var(--yellow); }
+    /* Clean badge (blue, not green — to avoid implying "verified") */
+    .result-badge.clean {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+    }
+    .result-badge.clean h2 { color: #60A5FA; }
+    .result-badge.clean .icon { background: rgba(59,130,246,0.12); }
+    .result-badge.clean .icon svg { color: #60A5FA; }
   </style>
 </head>
 <body>
@@ -249,7 +222,14 @@
   </div>
 
   <script>
-    const result = JSON.parse(sessionStorage.getItem('scanResult') || '{}');
+    const rawResult = JSON.parse(sessionStorage.getItem('scanResult') || '{}');
+    // Strip any old blockchain/certification fields from cached data
+    delete rawResult.txHash;
+    delete rawResult.explorerUrl;
+    delete rawResult.isValid;
+    delete rawResult.certifier;
+    delete rawResult.confidence;
+    const result = rawResult;
     const app = document.getElementById('app');
 
     function showToast(msg) {
@@ -260,19 +240,19 @@
       setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    function copyTxHash() {
-      if (result.txHash) {
-        navigator.clipboard.writeText(result.txHash).then(() => showToast('Transaction hash copied'))
-          .catch(() => showToast('Copy failed'));
-      }
-    }
-
     function shareResult() {
-      const text = result.isValid
-        ? `${result.product} is kosher certified (${result.symbol}) — verified by KashrutChain AI + Blockchain.`
-        : `${result.product} — could not verify kosher certification. Check with KashrutChain.`;
+      let text;
+      if (result.status === 'flagged') {
+        text = `${result.product} — ingredient analysis found non-kosher ingredients via KashrutChain.`;
+      } else if (result.status === 'review') {
+        text = `${result.product} — ingredient analysis flagged items needing rabbinic review via KashrutChain.`;
+      } else if (result.status === 'clean') {
+        text = `${result.product} — no known non-kosher ingredients detected via KashrutChain (not a kosher certification).`;
+      } else {
+        text = `${result.product} — ingredient analysis could not determine status via KashrutChain.`;
+      }
       if (navigator.share) {
-        navigator.share({ title: 'KashrutChain Verification', text });
+        navigator.share({ title: 'KashrutChain Ingredient Analysis', text });
       } else {
         navigator.clipboard.writeText(text + ' https://officialfshot-web.github.io/KashrutChain/')
           .then(() => showToast('Result copied to clipboard'));
@@ -285,26 +265,41 @@
           <a href="index.html" class="nav-back">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </a>
-          <span class="nav-title">Verification Result</span>
+          <span class="nav-title">Ingredient Analysis</span>
         </nav>
         <div class="container">
           <div class="empty">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            <h3>No Scan Found</h3>
-            <p>Scan a product label to see the verification result.</p>
-            <a href="scan.html" class="btn btn-primary" style="max-width:200px;margin:0 auto;">Start Scanning</a>
+            <h3>No Analysis Found</h3>
+            <p>Look up a product to see its ingredient analysis.</p>
+            <a href="scan.html" class="btn btn-primary" style="max-width:220px;margin:0 auto;">Look Up Product</a>
           </div>
         </div>
       `;
     } else {
-      const badgeClass = result.isValid ? 'verified' : 'fraud';
-      const badgeTitle = result.isValid ? 'VERIFIED ON BLOCKCHAIN' : 'NOT REGISTERED';
-      const badgeSub = result.isValid
-        ? 'Certified by ' + result.certifier
-        : 'No valid kosher certification found';
-      const badgeIcon = result.isValid
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+      const st = result.status || 'unknown';
+      let badgeClass, badgeTitle, badgeSub, badgeIcon;
+      if (st === 'flagged') {
+        badgeClass = 'flagged';
+        badgeTitle = 'Non-Kosher Ingredients Found';
+        badgeSub = 'Contains ingredients commonly considered non-kosher';
+        badgeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+      } else if (st === 'review') {
+        badgeClass = 'warning';
+        badgeTitle = 'Ingredients Need Review';
+        badgeSub = 'Some ingredients require rabbinic verification';
+        badgeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
+      } else if (st === 'clean') {
+        badgeClass = 'clean';
+        badgeTitle = 'No Non-Kosher Ingredients Detected';
+        badgeSub = 'Database entry has no known non-kosher items';
+        badgeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+      } else {
+        badgeClass = 'warning';
+        badgeTitle = 'No Ingredient Data';
+        badgeSub = 'Cannot perform ingredient analysis';
+        badgeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+      }
 
       const ingredientsHtml = (result.ingredients || []).map(ing => {
         const statusClass = ing.status;
@@ -316,14 +311,12 @@
         </div>`;
       }).join('');
 
-      const confidencePercent = Math.round((result.confidence || 0.5) * 100);
-
       app.innerHTML = `
         <nav class="nav">
           <a href="scan.html" class="nav-back">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </a>
-          <span class="nav-title">Verification Result</span>
+          <span class="nav-title">Ingredient Analysis</span>
         </nav>
         <div class="container">
           <div class="result-badge ${badgeClass}">
@@ -340,38 +333,9 @@
               <div>
                 <div class="card-title">Product</div>
                 <div class="card-value">${result.product}</div>
-                ${result.brand ? `<div class="card-sub">${result.brand}</div>` : ''}
+                ${result.brand && result.brand !== 'N/A' ? `<div class="card-sub">${result.brand}</div>` : ''}
+                ${result.barcode && result.barcode !== 'N/A' ? `<div class="card-sub" style="font-family:var(--font-mono);font-size:0.75rem;">Barcode: ${result.barcode}</div>` : ''}
               </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div class="card-header-icon" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <div>
-                <div class="card-title">Kosher Symbol</div>
-                <div class="card-value">${result.symbol || 'None detected'}</div>
-                ${result.certifier ? `<div class="card-sub">${result.certifier}</div>` : ''}
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div class="card-header-icon" style="background:rgba(245,165,36,0.1);border:1px solid rgba(245,165,36,0.2);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-              </div>
-              <div>
-                <div class="card-title">Classification</div>
-                <div class="card-value">${(result.classification || 'Unknown').toUpperCase()}</div>
-                ${result.passover && result.passover !== 'unknown' ? `<div class="card-sub">Passover: ${result.passover.replace(/_/g, ' ')}</div>` : ''}
-              </div>
-            </div>
-            <div class="confidence">
-              <div class="confidence-bar"><div class="confidence-fill" style="width:0%"></div></div>
-              <span class="confidence-text">${confidencePercent}% confidence</span>
             </div>
           </div>
 
@@ -385,37 +349,28 @@
             ${ingredientsHtml || '<div style="color:var(--text-muted);font-size:0.85rem;">No ingredients extracted.</div>'}
           </div>
 
-          <div class="card blockchain-card">
-            <div class="card-header">
-              <div class="card-header-icon" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              </div>
-              <div class="card-title">Blockchain Proof</div>
-            </div>
-            <div class="tx-hash">${result.txHash || 'N/A'}</div>
-            <div class="card-sub" style="margin-top:0.25rem;">Verified on Polygon PoS. Immutable and tamper-proof.</div>
-            <div class="tx-actions">
-              <button class="tx-action" onclick="copyTxHash()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                Copy
-              </button>
-              <a class="tx-action" href="${result.explorerUrl || '#'}" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                Explorer
-              </a>
+          <div class="card disclaimer-card">
+            <div class="card-title">Important Disclaimer</div>
+            <div class="disclaimer-text">
+              <strong>This is NOT kosher certification.</strong><br><br>
+              This tool only checks ingredient lists from Open Food Facts against known non-kosher items. It does <strong>not</strong> verify:<br>
+              &bull; Kosher certification symbols (hechsher)<br>
+              &bull; Processing equipment or facility status<br>
+              &bull; Handling, transport, or cross-contamination<br>
+              &bull; Whether ingredients are actually animal-derived<br><br>
+              ${result.summary ? '<strong>Summary:</strong> ' + result.summary + '<br><br>' : ''}
+              <strong>Always check the physical product packaging for a recognized kosher symbol (e.g., OU, OK, Star-K, Kof-K). When in doubt, consult a qualified rabbi.</strong>
             </div>
           </div>
-
-          ${result.notes ? `<div class="card"><div class="card-title">Notes</div><div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">${result.notes}</div></div>` : ''}
 
           <div class="actions">
             <button class="btn btn-primary" onclick="location.href='scan.html'">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-              Scan Another Product
+              Analyze Another Product
             </button>
             <button class="btn btn-secondary" onclick="shareResult()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Share Result
+              Share Analysis
             </button>
             <a href="index.html" class="btn btn-secondary">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -424,12 +379,6 @@
           </div>
         </div>
       `;
-
-      // Animate confidence bar after render
-      setTimeout(() => {
-        const fill = document.querySelector('.confidence-fill');
-        if (fill) fill.style.width = confidencePercent + '%';
-      }, 400);
     }
   </script>
 </body>

@@ -41,7 +41,7 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: `You are KashrutAI, a specialized food label analysis engine. Your job is to analyze product label images and extract structured kosher certification data. Output ONLY valid JSON. If a field is missing or uncertain, use null. Flag known non-kosher or ambiguous ingredients. Map symbols to standard certifier codes: OU, OK, STAR-K, KOF-K, CRC, CHK, BCK, VK, etc.`
+            content: `You are an ingredient analysis assistant. Analyze product label images and extract structured data. Output ONLY valid JSON. If a field is missing or uncertain, use null. Flag known non-kosher or ambiguous ingredients (gelatin, lard, shellfish, carmine, wine, alcohol, enzymes, etc.). Note any kosher symbols visible for reference only — do NOT certify kosher status.`
           },
           {
             role: 'user',
@@ -125,28 +125,22 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
       };
     }
 
-    // Determine overall validity (mock blockchain check for now)
+    // Extract detected symbols for reference only (NOT kosher certification)
     const hasSymbol = parsedResult.kosher_symbols && parsedResult.kosher_symbols.length > 0;
     const symbolCode = hasSymbol ? parsedResult.kosher_symbols[0].symbol_code : null;
-    const isKnownSymbol = ['OU', 'OK', 'STAR-K', 'KOF-K', 'CRC', 'CHK', 'BCK', 'VK'].includes(symbolCode);
-    
+
     const result = {
-      isValid: hasSymbol && isKnownSymbol,
-      symbol: symbolCode || 'NONE',
-      modifier: hasSymbol ? (parsedResult.kosher_symbols[0].modifier || '') : '',
-      certifier: getCertifierName(symbolCode),
       product: parsedResult.product_name || 'Unknown Product',
       brand: parsedResult.brand,
+      barcode: parsedResult.barcode,
       ingredients: parsedResult.ingredients || [],
+      detectedSymbols: parsedResult.kosher_symbols || [],
       classification: parsedResult.classification?.dietary || 'unknown',
       passover: parsedResult.classification?.passover_status || 'unknown',
       manufacturer: parsedResult.manufacturer,
       country: parsedResult.country_of_origin,
       notes: parsedResult.notes,
-      confidence: parsedResult.classification?.confidence || 0,
-      raw_ai_response: parsedResult,  // For debugging
-      txHash: `0x${generateFakeTxHash()}`,  // Placeholder until real blockchain
-      explorerUrl: 'https://mumbai.polygonscan.com/tx/0x...'
+      disclaimer: 'This is an ingredient analysis tool only. It does NOT certify kosher status. Always verify with physical packaging and a qualified rabbi.'
     };
 
     // Clean up uploaded file
@@ -169,25 +163,6 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
   }
 });
 
-function getCertifierName(code) {
-  const certifiers = {
-    'OU': 'Orthodox Union',
-    'OK': 'OK Kosher',
-    'STAR-K': 'Star-K Kosher',
-    'KOF-K': 'Kof-K Kosher',
-    'CRC': 'Chicago Rabbinical Council',
-    'CHK': 'Chaf-K',
-    'BCK': 'Badatz Crown Heights',
-    'VK': 'Vaad Hakashrus'
-  };
-  return certifiers[code] || 'Unknown Certifier';
-}
-
-function generateFakeTxHash() {
-  return Array.from({length: 64}, () => 
-    '0123456789abcdef'[Math.floor(Math.random() * 16)]
-  ).join('');
-}
 
 // Simple test without image (for debugging)
 app.post('/api/test', async (req, res) => {

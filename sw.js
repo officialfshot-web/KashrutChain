@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kashrutchain-v1';
+const CACHE_NAME = 'kashrutchain-v3';
 const STATIC_ASSETS = [
   '/KashrutChain/',
   '/KashrutChain/index.html',
@@ -29,18 +29,39 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: cache-first strategy for static, network-first for API
+// Fetch handler
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // API requests: always network
-  if (url.pathname.includes('/api/')) {
+  // 1. Open Food Facts API: NEVER cache, always network
+  if (url.hostname.includes('openfoodfacts.org')) {
     event.respondWith(fetch(request));
     return;
   }
 
-  // Static assets: cache first, network fallback
+  // 2. HTML pages: network-first (users always get latest)
+  if (request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(request).then((cached) => {
+            if (cached) return cached;
+            return caches.match('/KashrutChain/index.html');
+          });
+        })
+    );
+    return;
+  }
+
+  // 3. Static assets (CSS, JS, images, manifest): cache-first
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) {
@@ -59,10 +80,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       }).catch(() => {
-        // Offline fallback for navigation
-        if (request.mode === 'navigate') {
-          return caches.match('/KashrutChain/index.html');
-        }
         return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
       });
     })

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#050608">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Kosher Lookup — KashrutChain</title>
+  <title>Ingredient Lookup — KashrutChain</title>
   <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -100,6 +100,9 @@
     .cors-warn.active{display:block}
     .cors-warn a{color:var(--accent)}
 
+    .quick-picks{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;max-width:520px;margin:0 auto 1rem;padding:0 1rem}
+    .quick-pick{padding:.35rem .9rem;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-family:var(--font);font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s}
+    .quick-pick:hover{border-color:var(--accent);color:var(--accent)}
     .footer-hint{text-align:center;padding:2rem 1rem 3rem;color:var(--muted);font-size:.75rem}
     .footer-hint a{color:var(--accent);text-decoration:none}
   </style>
@@ -111,8 +114,8 @@
   </nav>
 
   <div class="search-hero">
-    <h1>Is it <span style="color:var(--accent)">Kosher</span>?</h1>
-    <p>Search 3 million real products from Open Food Facts. Or paste ingredients to check instantly.</p>
+    <h1>Check <span style="color:var(--accent)">Ingredients</span></h1>
+    <p>Search 3 million real products from Open Food Facts. Or paste ingredients to flag non-kosher items instantly.</p>
 
     <div class="modes">
       <button class="mode active" onclick="setMode(this,'product')">Search Products</button>
@@ -123,6 +126,17 @@
     <div class="big-search">
       <input type="text" id="searchInput" placeholder="Type a product name..." onkeydown="if(event.key==='Enter')doSearch()">
       <button id="searchBtn" onclick="doSearch()">Search</button>
+    </div>
+
+    <div class="quick-picks" id="quickPicks">
+      <span class="quick-pick" onclick="quickSearch('Oreo')">Oreo</span>
+      <span class="quick-pick" onclick="quickSearch('Coca Cola')">Coca Cola</span>
+      <span class="quick-pick" onclick="quickSearch('Snickers')">Snickers</span>
+      <span class="quick-pick" onclick="quickSearch('Nutella')">Nutella</span>
+      <span class="quick-pick" onclick="quickSearch('Skittles')">Skittles</span>
+      <span class="quick-pick" onclick="quickSearch('Doritos')">Doritos</span>
+      <span class="quick-pick" onclick="quickSearch('Pringles')">Pringles</span>
+      <span class="quick-pick" onclick="quickSearch('Gummy bears')">Gummy bears</span>
     </div>
 
     <div class="cors-warn" id="corsWarn">
@@ -164,12 +178,17 @@
   <p class="footer-hint">Data from <a href="https://world.openfoodfacts.org" target="_blank">Open Food Facts</a> &middot; Not a substitute for rabbinic authority</p>
 
   <script>
-    // ===== KOSHER DATABASE =====
-    const NON_KOSHER=['gelatin','lard','pork','bacon','ham','shellfish','shrimp','crab','lobster','oyster','clam','mussel','scallop','rennet','carmine','cochineal','tallow','suet','blood','anchovy','bonito','squid','octopus','eel','snail','frog','rabbit','horse','camel','kangaroo','sturgeon caviar'];
-    const CAUTION=['glycerin','glycerine','glycerol','mono and diglycerides','monoglycerides','diglycerides','natural flavor','natural flavour','wine','alcohol','ethanol','brandy','rum','vodka','whiskey','bourbon','gin','whey','casein','lactose','stearic acid','magnesium stearate','calcium stearate','mono-diglycerides','polysorbate','sorbitan'];
+    // ===== INGREDIENT DATABASE =====
+    // We ONLY flag known non-kosher or potentially non-kosher ingredients.
+    // This tool does NOT certify anything as kosher.
+    const FORBIDDEN=['gelatin','bovine gelatin','porcine gelatin','fish gelatin','e441','lard','pork','bacon','ham','prosciutto','salami','pepperoni','chorizo','shellfish','shrimp','prawn','crab','lobster','oyster','clam','mussel','scallop','scallops','rennet','animal rennet','carmine','cochineal','e120','tallow','beef tallow','suet','blood','blood plasma','anchovy','bonito','squid','calamari','octopus','eel','snail','escargot','frog','rabbit','hare','horse','camel','kangaroo','sturgeon caviar','caviar','bone phosphate','e542','shellac','e904','confectioner glaze','resinous glaze','animal fat','animal shortening','pepsin','animal lipase','lipase','animal trypsin','trypsin','castoreum','civet','ambergris','isinglass','musk','beaver'];
+    const CAUTION=['glycerin','glycerine','glycerol','vegetable glycerin','mono and diglycerides','monoglycerides','diglycerides','mono-diglycerides','natural flavor','natural flavour','natural flavors','natural flavours','artificial flavor','artificial flavour','artificial flavors','artificial flavours','wine','alcohol','ethanol','ethyl alcohol','brandy','rum','vodka','whiskey','whisky','bourbon','gin','tequila','cognac','liqueur','schnapps','beer','cider','ale','stout','porter','whey','whey protein','casein','caseinate','sodium caseinate','calcium caseinate','lactose','stearic acid','magnesium stearate','calcium stearate','polysorbate','polysorbates','sorbitan','sorbitan ester','enzymes','protease','amylase','invertase','lipase','trypsin','e471','e472','e472a','e472b','e472c','e472e','e472f','e473','e474','e475','e476','e477','e570','e631','e635','e640','e920','e921','cysteine','l-cysteine','calcium cysteine','xanthan gum','guar gum','pectin','carrageenan','agar','agar-agar','sodium stearoyl lactylate','ssl','calcium stearoyl lactylate','csl','datem','lecithin','soy lecithin','sunflower lecithin','mono sodium glutamate','msg','malt','malt extract','malt flavoring','malt syrup','brewer yeast','brewers yeast','yeast extract','autolyzed yeast','hydrolyzed protein','hydrolyzed vegetable protein','hvp','hydrolyzed soy protein','modified food starch','dextrose','maltodextrin','dextrin','invert sugar','invert syrup','high fructose corn syrup','hfcs','corn syrup','glucose syrup','fructose syrup','sorbitol','mannitol','xylitol','erythritol','isomalt','polysaccharide','inulin','fructooligosaccharide','fos','resistant starch'];
 
     // ===== STATE =====
     let currentMode='product';
+    let searchTimeout=null;
+    let searchAbort=null;
+    let isSearching=false;
     const input=document.getElementById('searchInput');
     const btn=document.getElementById('searchBtn');
     const toast=document.getElementById('toast');
@@ -192,17 +211,50 @@
       document.querySelector('.big-search').style.display=mode==='ingredients'?'none':'block';
       if(mode==='barcode'){input.placeholder='Type a barcode number...';input.inputMode='numeric';btn.textContent='Lookup'}
       else if(mode==='product'){input.placeholder='Type a product name...';input.inputMode='text';btn.textContent='Search'}
+      document.getElementById('quickPicks').style.display=mode==='product'?'flex':'none';
     }
+
+    function quickSearch(term){
+      input.value=term;
+      doSearch();
+    }
+
+    // Auto-search with debounce for product mode
+    input.addEventListener('input',()=>{
+      if(currentMode!=='product')return;
+      if(isSearching)return; // don't auto-search while manual search running
+      clearTimeout(searchTimeout);
+      const q=input.value.trim();
+      if(q.length<2)return;
+      searchTimeout=setTimeout(()=>doSearch(),600);
+    });
+
+    // Auto-focus search on load
+    window.addEventListener('DOMContentLoaded',()=>{
+      if(currentMode==='product')input.focus();
+    });
 
     // ===== SEARCH / BARCODE =====
     async function doSearch(){
       const q=input.value.trim();
       if(!q){showToast('Enter a search term',true);return}
+
+      // Cancel any in-flight request
+      if(searchAbort){searchAbort.abort()}
+      searchAbort=new AbortController();
+      clearTimeout(searchTimeout);
+      isSearching=true;
+
       document.getElementById('resultsWrap').classList.remove('active');
       document.getElementById('noResults').classList.remove('active');
       document.getElementById('corsWarn').classList.remove('active');
       setLoader(true,currentMode==='barcode'?'Looking up barcode...':'Searching products...');
       btn.disabled=true;
+
+      // 8-second timeout
+      const timeoutId=setTimeout(()=>{
+        if(searchAbort){searchAbort.abort()}
+      },8000);
 
       try{
         let url;
@@ -212,11 +264,14 @@
           url=`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=20`;
         }
 
-        const res=await fetch(url);
+        const res=await fetch(url,{signal:searchAbort.signal});
+        clearTimeout(timeoutId);
         if(!res.ok)throw new Error('API error '+res.status);
         const data=await res.json();
         setLoader(false);
         btn.disabled=false;
+        isSearching=false;
+        searchAbort=null;
 
         if(currentMode==='barcode'){
           if(data.status!==1||!data.product){showToast('Product not found. Try search by name.',true);return}
@@ -244,9 +299,15 @@
         document.getElementById('resultsWrap').classList.add('active');
 
       }catch(err){
-        setLoader(false);btn.disabled=false;
+        clearTimeout(timeoutId);
+        setLoader(false);
+        btn.disabled=false;
+        isSearching=false;
+        searchAbort=null;
         console.error(err);
-        if(err.message.includes('Failed to fetch')||err.name==='TypeError'){
+        if(err.name==='AbortError'){
+          showToast('Request timed out. Please try again.',true);
+        }else if(err.message.includes('Failed to fetch')||err.name==='TypeError'){
           document.getElementById('corsWarn').classList.add('active');
           showToast('Browser blocked the request. See warning above.',true);
         }else{
@@ -269,46 +330,73 @@
     }
 
     // ===== ANALYSIS ENGINE =====
+    // CRITICAL: This tool only checks ingredient lists. It does NOT certify
+    // products as kosher. Always verify with the physical product packaging.
     function analyzeProduct(product){
-      const name=(product.product_name||product.generic_name||'Unknown Product').toLowerCase();
+      const rawName=product.product_name||product.generic_name||'Unknown Product';
+      const name=rawName.toLowerCase();
       const brand=(product.brands||'').toLowerCase();
-      const labels=(product.labels||'').toLowerCase()+' '+(product.categories||'').toLowerCase()+' '+(product.ingredients_text||'').toLowerCase();
+      const categories=(product.categories||'').toLowerCase()+' '+(product.categories_tags||[]).join(' ').toLowerCase()+' '+(product.compared_to_category||'').toLowerCase();
       const ingredients=product.ingredients||[];
-      const ingText=ingredients.map(i=>(i.text||i.id||'').toLowerCase()).join(' ');
-      const allText=name+' '+brand+' '+labels+' '+ingText;
 
-      let isKosher=false,symbol='',certifier='',confidence=0,classification='unknown',passover='unknown',notes=[],flaggedIngs=[];
-
-      const kosherSyms={'OU':'Orthodox Union','OK':'OK Kosher','STAR-K':'Star-K','CRC':'Chicago Rabbinical Council','KSA':'Kosher Supervision of America'};
-      for(const[sym,cert] of Object.entries(kosherSyms)){
-        if(allText.includes(sym.toLowerCase())||allText.includes(cert.toLowerCase())){isKosher=true;symbol=sym;certifier=cert;confidence=.85;break}
-      }
-      if(!isKosher&&allText.includes('kosher')){isKosher=true;confidence=.55;symbol='Generic';certifier='Claimed Kosher'}
-      if(!isKosher&&allText.includes('pareve')){isKosher=true;confidence=.5;symbol='Generic';certifier='Claimed Pareve'}
-
+      // Flag ingredients
+      const flaggedIngs=[];
       ingredients.forEach(ing=>{
         const txt=(ing.text||ing.id||'').toLowerCase();
-        for(const bad of NON_KOSHER){if(txt.includes(bad)){flaggedIngs.push({name:ing.text||ing.id,status:'forbidden',reason:'Contains '+bad});return}}
+        for(const bad of FORBIDDEN){if(txt.includes(bad)){flaggedIngs.push({name:ing.text||ing.id,status:'forbidden',reason:'Contains '+bad});return}}
         for(const c of CAUTION){if(txt.includes(c)){flaggedIngs.push({name:ing.text||ing.id,status:'caution',reason:'May be non-kosher ('+c+')'});return}}
         flaggedIngs.push({name:ing.text||ing.id,status:'safe',reason:null});
       });
 
-      if(flaggedIngs.some(i=>i.status==='forbidden')){isKosher=false;confidence=.95;notes.push('Contains non-kosher ingredients.')}
-      else if(flaggedIngs.some(i=>i.status==='caution')){classification='needs_review';notes.push('Some ingredients require rabbinic verification.')}
-      else if(isKosher){classification='kosher';confidence=Math.min(confidence+.15,1)}
+      const hasForbidden=flaggedIngs.some(i=>i.status==='forbidden');
+      const hasCaution=flaggedIngs.some(i=>i.status==='caution');
+      const hasIngredients=ingredients.length>0;
 
-      if(labels.includes('pareve'))classification='pareve';
-      if(labels.includes('passover'))passover='certified';
+      // Alcohol detection (always needs certification)
+      const alcoholKeywords=['alcoholic beverages','wines','spirits','liquors','beers','ciders','vodka','whiskey','whisky','rum','gin','brandy','tequila','bourbon','cognac','liqueur','schnapps','wine','beer','champagne'];
+      const isAlcohol=alcoholKeywords.some(k=>categories.includes(k)||name.includes(k));
+
+      let status='unknown'; // 'flagged' | 'review' | 'clean' | 'unknown'
+      let summary='';
+      let confidence=0;
+
+      if(hasForbidden){
+        status='flagged';
+        confidence=.95;
+        summary='This product contains ingredients commonly considered non-kosher.';
+      }
+      else if(isAlcohol){
+        status='review';
+        confidence=.2;
+        summary='Alcoholic beverages require reliable kosher certification. Equipment, grape derivatives, and processing methods are not checked here.';
+      }
+      else if(hasCaution){
+        status='review';
+        confidence=.35;
+        summary='This product contains ingredients that may be non-kosher depending on their source and processing.';
+      }
+      else if(!hasIngredients){
+        status='unknown';
+        confidence=.1;
+        summary='No ingredient data available. Cannot perform ingredient analysis.';
+      }
+      else{
+        status='clean';
+        confidence=.4;
+        summary='No known non-kosher ingredients were found in the database entry. This does NOT mean the product is kosher.';
+      }
 
       return{
-        isValid:isKosher,symbol:symbol||'None detected',certifier:certifier||'N/A',
-        product:product.product_name||product.generic_name||'Unknown Product',
-        brand:product.brands||'N/A',manufacturer:product.manufacturing_places||'N/A',country:product.countries||'N/A',
+        status,
+        product:rawName,
+        brand:product.brands||'N/A',
+        manufacturer:product.manufacturing_places||'N/A',
+        country:product.countries||'N/A',
+        barcode:product.code||'N/A',
         ingredients:flaggedIngs.length?flaggedIngs:[{name:'No ingredients listed',status:'unknown',reason:'Database has no ingredient data'}],
-        classification,passover,confidence:Math.round(confidence*100)/100,
-        notes:notes.length?notes.join(' '):'Analysis based on real Open Food Facts data. Always consult a rabbi for final halachic determination.',
-        txHash:'0x'+Array.from({length:64},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join(''),
-        explorerUrl:'https://polygonscan.com/tx/0x'+Array.from({length:64},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('')
+        summary,
+        confidence:Math.round(confidence*100)/100,
+        disclaimer:'This tool only checks ingredient lists from Open Food Facts. It does NOT verify kosher certification, processing equipment, or handling. Always check the physical product packaging for a recognized kosher symbol (hechsher). When in doubt, consult a qualified rabbi.'
       };
     }
 
@@ -322,7 +410,7 @@
       const results=[];
       items.forEach(item=>{
         const lower=item.toLowerCase();
-        for(const bad of NON_KOSHER){if(lower.includes(bad)){results.push({name:item,status:'forbidden',reason:'Contains '+bad});return}}
+        for(const bad of FORBIDDEN){if(lower.includes(bad)){results.push({name:item,status:'forbidden',reason:'Contains '+bad});return}}
         for(const c of CAUTION){if(lower.includes(c)){results.push({name:item,status:'caution',reason:'May be non-kosher ('+c+')'});return}}
         results.push({name:item,status:'safe',reason:null});
       });
@@ -335,7 +423,7 @@
       const caution=results.filter(r=>r.status==='caution').length;
       if(bad>0)showToast(`${bad} non-kosher ingredient${bad>1?'s':''} found!`,true);
       else if(caution>0)showToast(`${caution} ingredient${caution>1?'s':''} need rabbinic verification`);
-      else showToast('All ingredients look kosher. Still consult a rabbi.');
+      else showToast('No flagged ingredients found. Still verify packaging.');
     }
   </script>
 </body>

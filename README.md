@@ -1,44 +1,41 @@
 # KashrutChain
 
-**AI + Blockchain kosher verification. Works on any device.**
+**Kosher ingredient research tool. Works on any device.**
 
-[🚀 Try it now](https://officialfshot-web.github.io/KashrutChain/) | [📱 Android App (coming soon)](https://github.com/officialfshot-web/KashrutChain/releases)
+[🚀 Try it now](https://officialfshot-web.github.io/KashrutChain/)
 
 ## What It Does
 
-Point your camera at any food label. KashrutChain uses AI to read the kosher symbol, analyze ingredients, and verify the certification on an immutable blockchain ledger.
+Search 3 million products from Open Food Facts or paste any ingredient list to check for known non-kosher items.
 
-- **Fraud Detection** — Flags counterfeit symbols instantly
-- **Ingredient Analysis** — AI spots hidden non-kosher ingredients
-- **Blockchain Proof** — Every verification is publicly auditable
-- **Offline Ready** — Cached symbol database works without internet
+- **Product Lookup** — Search by name or barcode
+- **Ingredient Checker** — Paste any ingredient list for instant analysis
+- **Ingredient Analysis** — Flags hidden non-kosher ingredients like gelatin, shellac, animal enzymes, and more
+- **Works Everywhere** — PWA runs on kosher phones, iOS, Android, and desktop with no install
 
-## Why It Matters
+## Important Disclaimer
 
-Counterfeit kosher certification is a $500M+ fraud problem. Consumers currently verify symbols by calling certifiers or checking static PDFs. KashrutChain brings this into the 21st century with AI and blockchain.
+**This tool does NOT certify products as kosher.** It only checks ingredient lists from Open Food Facts against known non-kosher items. It does not verify:
+- Kosher certification symbols (hechsher)
+- Processing equipment or facility status
+- Handling, transport, or cross-contamination
+- Whether ingredients are actually animal-derived
+
+Always check the physical product packaging for a recognized kosher symbol. When in doubt, consult a qualified rabbi.
 
 ## Tech Stack
 
 - **Frontend:** HTML5, CSS3, JavaScript (PWA)
-- **AI:** OpenAI GPT-4o for label parsing
-- **Blockchain:** Polygon PoS smart contract for immutable certification registry
-- **Mobile App:** Kotlin, Jetpack Compose, CameraX, ML Kit OCR (Android MVP in development)
-
-## Architecture
-
-```
-Camera → OCR (ML Kit / Google Vision) → AI Parser (OpenAI GPT-4o) 
-→ Blockchain Verification (Polygon PoS) → Result Display
-```
+- **Data:** Open Food Facts API (3M+ products)
+- **Mobile App:** Kotlin, Jetpack Compose (planned)
 
 ## Roadmap
 
-- [x] PWA scanner (live now)
-- [ ] OpenAI integration with real label parsing
-- [ ] Polygon smart contract deployment
+- [x] PWA ingredient lookup (live now)
+- [x] Ingredient checker mode
+- [ ] Enhanced ingredient database
 - [ ] Android native app with offline-first architecture
 - [ ] iOS support via Kotlin Multiplatform
-- [ ] SMS verification for feature phones
 
 ## About the Author
 

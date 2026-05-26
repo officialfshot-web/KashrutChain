@@ -1,7 +1,7 @@
 {
   "name": "kashrutchain-server",
   "version": "1.0.0",
-  "description": "Backend for KashrutChain AI label scanning",
+  "description": "Backend for KashrutChain ingredient analysis",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
